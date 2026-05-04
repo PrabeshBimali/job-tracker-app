@@ -1,9 +1,10 @@
+import Dashboard from "../components/Dashboard";
+import MainLayout from "../layouts/MainLayout";
+
 export default function HomePage() {
   return (
-    <>
-      <h1 className="text-text-color">
-        Test text color
-      </h1>
-    </>
+    <MainLayout>
+      <Dashboard/>
+    </MainLayout>
   )
 }
