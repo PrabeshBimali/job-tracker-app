@@ -1,6 +1,7 @@
 import { Plus } from "lucide-react"
 import { useState } from "react"
 import Modal from "./Modal";
+import AddApplicationForm from "./AddApplicationForm";
 
 export default function AddApplication() {
 
@@ -21,9 +22,9 @@ export default function AddApplication() {
         onClose={() => setIsAddFormOpen(false)}
         title="Add New Application"
       >
-        <form>
-
-        </form>
+        <AddApplicationForm
+          onClose={() => console.log("hmmm")}
+        />
       </Modal>
     </div>
   )
