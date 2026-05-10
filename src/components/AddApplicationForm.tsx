@@ -39,14 +39,12 @@ export default function AddApplicationForm({ /*onSubmit,*/ onClose }: AddJobForm
 
   const [errors, setErrors] = useState<Partial<Record<keyof FormState, string>>>({});
 
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
-  ) => {
+  function handleChange(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) {
     const { name, value } = e.target
     setForm(prev => ({ ...prev, [name]: value }))
   }
 
-  const validate = () => {
+  function validate() {
     const newErrors: Partial<Record<keyof FormState, string>> = {}
 
     if (!form.company.trim()) newErrors.company = "Company is required"
@@ -61,7 +59,7 @@ export default function AddApplicationForm({ /*onSubmit,*/ onClose }: AddJobForm
     return Object.keys(newErrors).length === 0
   }
 
-  const handleSubmit = (e: React.FormEvent) => {
+  function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
 
     if (!validate()) return
