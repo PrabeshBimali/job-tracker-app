@@ -28,7 +28,7 @@ export default function Modal(props: ModalProps) {
       
       <div className="relative w-full max-w-md bg-background-color border border-secondary-color rounded-xl shadow-2xl p-6">
         <div className="flex justify-between items-center mb-4">
-          <h2 className="text-2xl text-center font-bold text-primary-color">{title}</h2>
+          <h2 className="text-2xl text-center font-bold text-accent-color">{title}</h2>
           <button onClick={onClose} className="text-3xl text-text-color hover:text-red-500 cursor-pointer">
             <CircleX/>
           </button>

@@ -10,8 +10,8 @@ export default function AddApplication() {
   return (
     <div className="py-5 flex justify-end">
       <button 
-        className="p-3 bg-primary-color text-background-color text-sm font-semibold 
-          flex justify-around items-center gap-2 cursor-pointer hover:bg-primary-color/80"
+        className="p-3 bg-button-color text-background-color text-sm font-semibold 
+          flex justify-around items-center gap-2 cursor-pointer hover:bg-button-color/80"
         onClick={() => setIsAddFormOpen(true)}
       >
         <span><Plus/></span>

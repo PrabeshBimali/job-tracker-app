@@ -14,10 +14,10 @@ export default function Navbar() {
   }, [dark])
 
   return (
-    <nav className="w-full border-b bg-background-color border-text-color px-6 py-3">
+    <nav className="w-full border-b bg-primary-color border-secondary-color px-6 py-3">
       <div className="max-w-7xl mx-auto flex items-center justify-between cursor-pointer">
         <div>
-          <span className="text-primary-color text-2xl font-bold">JOB</span>
+          <span className="text-accent-color text-2xl font-bold">JOB</span>
           <span className="text-text-color text-2xl">Track</span>
         </div>
 
@@ -42,11 +42,11 @@ export default function Navbar() {
             {open && (
               <div className="absolute right-0 mt-2 w-40 bg-background-color text-text-color rounded-md shadow-md border-text-color">
 
-                <button className="w-full text-left px-4 py-2 text-sm hover:text-background-color hover:bg-primary-color cursor-pointer font-semibold">
+                <button className="w-full text-left px-4 py-2 text-sm hover:bg-primary-color cursor-pointer font-semibold">
                   Export Data
                 </button>
 
-                <button className="w-full text-left px-4 py-2 text-sm hover:text-background-color hover:bg-primary-color cursor-pointer font-semibold">
+                <button className="w-full text-left px-4 py-2 text-sm hover:bg-primary-color cursor-pointer font-semibold">
                   Import Data
                 </button>
 
