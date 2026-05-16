@@ -7,6 +7,7 @@
   --secondary-color: #B9BABA;
   --accent-color: #5BADF6;
   --button-color: #62a1ee;
+  --error-color: #da4a4aee;
 }
 
 .dark {
@@ -16,6 +17,7 @@
   --secondary-color: #464545;
   --accent-color: #5BADF6;
   --button-color: #89B4EA;
+  --error-color: #da4a4aee;
 }
 
 @theme {
@@ -25,4 +27,5 @@
   --color-secondary-color: var(--secondary-color);
   --color-accent-color: var(--accent-color);
   --color-button-color: var(--button-color);
+  --color-error-color: var(--error-color);
 }

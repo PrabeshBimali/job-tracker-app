@@ -40,13 +40,13 @@ export default function Navbar() {
             </button>
 
             {open && (
-              <div className="absolute right-0 mt-2 w-40 bg-background-color text-text-color rounded-md shadow-md border-text-color">
+              <div className="absolute right-0 mt-2 w-40 bg-primary-color text-text-color rounded-md shadow-md border-text-color">
 
-                <button className="w-full text-left px-4 py-2 text-sm hover:bg-primary-color cursor-pointer font-semibold">
+                <button className="w-full text-left px-4 py-2 text-sm hover:bg-secondary-color cursor-pointer font-semibold">
                   Export Data
                 </button>
 
-                <button className="w-full text-left px-4 py-2 text-sm hover:bg-primary-color cursor-pointer font-semibold">
+                <button className="w-full text-left px-4 py-2 text-sm hover:bg-secondary-color cursor-pointer font-semibold">
                   Import Data
                 </button>
 

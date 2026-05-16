@@ -2,7 +2,7 @@ import { useState } from "react"
 
 export type JobStatus = "Applied" | "Interview" | "Rejected" | "Offer";
 
-export interface Job {
+export interface Application {
   id: number
   company: string
   role: string
@@ -22,7 +22,7 @@ interface AddJobFormProps {
   onClose: () => void;
 }
 
-type FormState = Omit<Job, "id" | "createdAt" | "updatedAt">
+type FormState = Omit<Application, "id" | "createdAt" | "updatedAt">
 
 export default function AddApplicationForm({ /*onSubmit,*/ onClose }: AddJobFormProps) {
   const [form, setForm] = useState<FormState>({
@@ -40,23 +40,23 @@ export default function AddApplicationForm({ /*onSubmit,*/ onClose }: AddJobForm
   const [errors, setErrors] = useState<Partial<Record<keyof FormState, string>>>({});
 
   function handleChange(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) {
-    const { name, value } = e.target
-    setForm(prev => ({ ...prev, [name]: value }))
+    const { name, value } = e.target;
+    setForm(prev => ({ ...prev, [name]: value }));
   }
 
   function validate() {
-    const newErrors: Partial<Record<keyof FormState, string>> = {}
+    const newErrors: Partial<Record<keyof FormState, string>> = {};
 
-    if (!form.company.trim()) newErrors.company = "Company is required"
-    if (!form.role.trim()) newErrors.role = "Role is required"
-    if (!form.dateApplied) newErrors.dateApplied = "Date is required"
+    if (!form.company.trim()) newErrors.company = "Company is required";
+    if (!form.role.trim()) newErrors.role = "Role is required";
+    if (!form.dateApplied) newErrors.dateApplied = "Date is required";
 
     if (form.jobUrl && !/^https?:\/\/.+/.test(form.jobUrl)) {
-      newErrors.jobUrl = "Invalid URL"
+      newErrors.jobUrl = "Invalid URL";
     }
 
-    setErrors(newErrors)
-    return Object.keys(newErrors).length === 0
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
   }
 
   function handleSubmit(e: React.SubmitEvent<HTMLFormElement>) {
