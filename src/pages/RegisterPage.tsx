@@ -30,7 +30,7 @@ export default function RegisterPage() {
     if (password.length < 10) newErrors.password = "Password must be at least 10 characters";
     if (!/^[a-zA-Z0-9]+$/.test(username)) newErrors.username = "Username can only contain number of letters";
 
-    setErrors(newErrors)
+    setErrors(newErrors);
 
     return Object.keys(newErrors).length === 0;
   }
