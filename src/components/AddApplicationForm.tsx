@@ -18,13 +18,13 @@ export interface Application {
 }
 
 interface AddJobFormProps {
- // onSubmit: (job: Job) => void;
+  onSubmit: (job: Application) => void;
   onClose: () => void;
 }
 
 type FormState = Omit<Application, "id" | "createdAt" | "updatedAt">
 
-export default function AddApplicationForm({ /*onSubmit,*/ onClose }: AddJobFormProps) {
+export default function AddApplicationForm({ onSubmit, onClose }: AddJobFormProps) {
   const [form, setForm] = useState<FormState>({
     company: "",
     role: "",
@@ -66,55 +66,55 @@ export default function AddApplicationForm({ /*onSubmit,*/ onClose }: AddJobForm
 
     const now = new Date().toISOString()
 
-   // onSubmit({
-   //   ...form,
-   //   id: Date.now(),
-   //   createdAt: now,
-   //   updatedAt: now
-   // })
+    onSubmit({
+      ...form,
+      id: Date.now(),
+      createdAt: now,
+      updatedAt: now
+    })
 
     onClose()
   }
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4 text-text-color">
+    <form onSubmit={handleSubmit} className="space-y-4 text-text-color font-semibold">
 
       <div>
-        <label className="text-sm font-semibold text-text-color">Company *</label>
+        <label className="text-sm text-text-color">Company *</label>
         <input
           name="company"
           value={form.company}
           onChange={handleChange}
-          className="w-full mt-1 p-2 bg-background-color border-b-2 border-secondary-color focus:outline-none focus:border-button-color"
+          className={`w-full mt-1 p-1 border-b ${errors.company ? "border-error-color" : "border-secondary-color"} focus:outline-none focus:border-button-color font-normal tracking-wide`}
         />
-        {errors.company && <p className="text-red-500 text-xs">{errors.company}</p>}
+        {errors.company && <span className="text-xs text-error-color">{errors.company}</span>}
       </div>
 
       <div>
-        <label className="text-sm font-semibold text-text-color">Role *</label>
+        <label className="text-sm text-text-color">Role *</label>
         <input
           name="role"
           value={form.role}
           onChange={handleChange}
-          className="w-full mt-1 p-2 bg-background-color border-b-2 border-secondary-color focus:outline-none focus:border-button-color"
+          className={`w-full mt-1 p-1 border-b ${errors.role ? "border-error-color" : "border-secondary-color"} focus:outline-none focus:border-button-color font-normal tracking-wide`}
         />
-        {errors.role && <p className="text-red-500 text-xs">{errors.role}</p>}
+        {errors.role && <span className="text-xs text-error-color">{errors.role}</span>}
       </div>
 
       <div>
-        <label className="text-sm font-semibold text-text-color">Job URL</label>
+        <label className="text-sm text-text-color">Job URL</label>
         <input
           name="jobUrl"
           value={form.jobUrl}
           onChange={handleChange}
           placeholder="https://..."
-          className="w-full mt-1 p-2 bg-background-color border-b-2 border-secondary-color focus:outline-none focus:border-button-color"
+          className={`w-full mt-1 p-1 border-b ${errors.jobUrl ? "border-error-color" : "border-secondary-color"} focus:outline-none focus:border-button-color font-normal tracking-wide`}
         />
-        {errors.jobUrl && <p className="text-red-500 text-xs">{errors.jobUrl}</p>}
+        {errors.jobUrl && <span className="text-xs text-error-color">{errors.jobUrl}</span>}
       </div>
 
       <div>
-        <label className="text-sm font-semibold text-text-color">Location</label>
+        <label className="text-sm text-text-color">Location</label>
         <input
           name="location"
           value={form.location}
@@ -125,7 +125,7 @@ export default function AddApplicationForm({ /*onSubmit,*/ onClose }: AddJobForm
 
       <div className="grid grid-cols-2 gap-3">
         <div>
-          <label className="text-sm font-semibold text-text-color">Status</label>
+          <label className="text-sm text-text-color">Status</label>
           <select
             name="status"
             value={form.status}
@@ -139,21 +139,21 @@ export default function AddApplicationForm({ /*onSubmit,*/ onClose }: AddJobForm
         </div>
 
         <div>
-          <label className="text-sm font-semibold text-text-color">Date Applied *</label>
+          <label className="text-sm text-text-color">Date Applied *</label>
           <input
             type="date"
             name="dateApplied"
             value={form.dateApplied}
             onChange={handleChange}
-            className="w-full mt-1 p-2 bg-background-color border-b-2 border-secondary-color focus:outline-none focus:border-button-color"
+            className={`w-full mt-1 p-1 border-b ${errors.dateApplied ? "border-error-color" : "border-secondary-color"} focus:outline-none focus:border-button-color font-normal tracking-wide`}
           />
-          {errors.dateApplied && <p className="text-red-500 text-xs">{errors.dateApplied}</p>}
+          {errors.dateApplied && <span className="text-xs text-error-color">{errors.dateApplied}</span>}
         </div>
       </div>
 
       <div className="grid grid-cols-2 gap-3">
         <div>
-          <label className="text-sm font-semibold text-text-color">Next Action</label>
+          <label className="text-sm text-text-color">Next Action</label>
           <input
             name="nextAction"
             value={form.nextAction}
@@ -163,7 +163,7 @@ export default function AddApplicationForm({ /*onSubmit,*/ onClose }: AddJobForm
         </div>
 
         <div>
-          <label className="text-sm font-semibold text-text-color">Next Action Date</label>
+          <label className="text-sm text-text-color">Next Action Date</label>
           <input
             type="date"
             name="nextActionDate"
@@ -175,7 +175,7 @@ export default function AddApplicationForm({ /*onSubmit,*/ onClose }: AddJobForm
       </div>
 
       <div>
-        <label className="text-sm font-semibold text-text-color">Notes</label>
+        <label className="text-sm text-text-color">Notes</label>
         <textarea
           name="notes"
           value={form.notes}
@@ -189,7 +189,7 @@ export default function AddApplicationForm({ /*onSubmit,*/ onClose }: AddJobForm
         <button
           type="button"
           onClick={onClose}
-          className="cursor-pointer px-4 py-2 rounded-md bg-secondary-color text-white hover:bg-secondary-color/80"
+          className="cursor-pointer px-4 py-2 rounded-md bg-secondary-color text-primary-color hover:bg-secondary-color/80 shadow-sm"
         >
           Cancel
         </button>

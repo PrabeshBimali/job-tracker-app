@@ -1,5 +1,7 @@
 import { useState } from "react";
 import AuthLayout from "../layouts/AuthLayout";
+import { addUser, type DbUser } from "../lib/indexedDb";
+import { generatePrivateKey } from "../lib/crypto";
 
 export interface AuthData {
   username: string;
@@ -14,6 +16,7 @@ export default function RegisterPage() {
     password: ""
   });
   const [ showPassword, setShowPassword ] = useState<boolean>(false);
+  const [ isLoading, setIsLoading ] = useState<boolean>(false);
 
   function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
     const { name, value } = e.target;
@@ -35,11 +38,31 @@ export default function RegisterPage() {
     return Object.keys(newErrors).length === 0;
   }
 
-  function submitForm(e: React.SubmitEvent<HTMLFormElement>) {
-    e.preventDefault();
+  async function submitForm(e: React.SubmitEvent<HTMLFormElement>) {
+    try {
+      setIsLoading(true);
 
-    if(!validate()) return;
-  }
+      e.preventDefault();
+
+      if(!validate()) return;
+      const privateKeyData = await generatePrivateKey(form.password.trim());
+
+      const newUser: DbUser = {
+        username: form.username.trim().toLowerCase(),
+        salt: privateKeyData.salt
+      }
+      await addUser(newUser);
+    } catch (error) {
+
+      if(error instanceof DOMException && error.name === "ConstraintError") {
+        setErrors({ username: "Username already exists" });
+      } else {
+        console.error("Error occurred while registering user:", error);
+      }
+    } finally {
+      setIsLoading(false);
+    }
+}
 
   return (
     <AuthLayout>
@@ -86,8 +109,12 @@ export default function RegisterPage() {
               {errors.password}
             </span>
           </div>
-          <button className="py-3 font-semibold text-primary-color bg-button-color cursor-pointer hover:bg-button-color/80">
-            Register
+          <button 
+            type="submit"
+            className="py-3 font-semibold text-primary-color bg-button-color cursor-pointer hover:bg-button-color/80"
+            disabled={isLoading}
+          >
+            {isLoading ? "Registering..." : "Register"}
           </button>
         </form>
       </div>
