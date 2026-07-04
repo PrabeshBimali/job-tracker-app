@@ -83,7 +83,7 @@ export default function LoginPage() {
   return (
     <AuthLayout>
       <div className="bg-primary-color flex flex-col gap-5 p-5 rounded-sm lg:w-1/5 md:w-1/2 sm:w-5/6">
-        <h1 className="text-3xl font-bold text-center">
+        <h1 className="text-3xl font-bold text-center text-text-color">
           Login
         </h1>
         <form 
@@ -133,6 +133,14 @@ export default function LoginPage() {
             {isLoading ? "Loggin in..." : "Login"}
           </button>
         </form>
+        <div className="flex justify-center items-center gap-1">
+          <span className="text-sm text-text-color">
+            Don't have an account? 
+          </span>
+          <a href="/register" className="text-button-color hover:text-button-color/80 font-semibold">
+            Register
+          </a>
+        </div>
       </div>
     </AuthLayout>
   )

@@ -73,7 +73,7 @@ export default function RegisterPage() {
   return (
     <AuthLayout>
       <div className="bg-primary-color flex flex-col gap-5 p-5 rounded-sm lg:w-1/5 md:w-1/2 sm:w-5/6">
-        <h1 className="text-3xl font-bold text-center">
+        <h1 className="text-3xl font-bold text-center text-text-color">
           Register
         </h1>
         <form 
@@ -123,6 +123,14 @@ export default function RegisterPage() {
             {isLoading ? "Registering..." : "Register"}
           </button>
         </form>
+        <div className="flex justify-center items-center gap-1">
+          <span className="text-sm text-text-color">
+            Already have an account? 
+          </span>
+          <a href="/login" className="text-button-color hover:text-button-color/80 font-semibold">
+            Login
+          </a>
+        </div>
       </div>
     </AuthLayout>
   )

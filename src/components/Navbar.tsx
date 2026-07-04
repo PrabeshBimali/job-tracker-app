@@ -1,17 +1,10 @@
-import { useState, useEffect } from "react"
+import { useState } from "react"
 import { User, Sun, Moon } from "lucide-react"
+import { useTheme } from "../contexts/ThemeContext";
 
 export default function Navbar() {
-  const [dark, setDark] = useState(false)
-  const [open, setOpen] = useState(false)
-
-  useEffect(() => {
-    if (dark) {
-      document.documentElement.classList.add("dark")
-    } else {
-      document.documentElement.classList.remove("dark")
-    }
-  }, [dark])
+  const { toggleTheme, dark } = useTheme()
+  const [open, setOpen] = useState(false);
 
   return (
     <nav className="w-full border-b bg-primary-color border-secondary-color px-6 py-3">
@@ -24,7 +17,7 @@ export default function Navbar() {
         <div className="flex items-center gap-4">
 
           <button
-            onClick={() => setDark(!dark)}
+            onClick={() => toggleTheme()}
             className="px-3 py-1 rounded-md text-sm bg-background-color text-text-color cursor-pointer hover:text-text-color/80"
           >
             {dark ? <Sun/> : <Moon/>}
