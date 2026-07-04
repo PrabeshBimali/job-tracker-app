@@ -4,7 +4,7 @@ const DB_VERSION = 1;
 let cachedDb: IDBDatabase | null = null;
 
 export interface DbUser {
-  id?: number;
+  id: number;
   username: string;
 
   salt: Uint8Array;
@@ -17,7 +17,7 @@ export interface DbUser {
 }
 
 export interface DbApplication {
-  id?: number;
+  id: number;
   userId: number;
   iv: Uint8Array;
   ciphertext: ArrayBuffer;

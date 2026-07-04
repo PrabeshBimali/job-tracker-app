@@ -4,8 +4,13 @@ import { getUserByUsername } from "../lib/indexedDb";
 import { generatePrivateKey } from "../lib/crypto";
 import { verifyPassword } from "../lib/authentication";
 import {type AuthData } from "./RegisterPage";
+import { useAuth } from "../contexts/AuthContext";
+import { useNavigate } from "react-router";
 
 export default function LoginPage() {
+
+  const { login } = useAuth();
+  const navigate = useNavigate();
 
   const [ errors, setErrors ] = useState<Partial<Record<keyof AuthData, string>>>({});
   const [ form, setForm ] = useState<AuthData>({
@@ -64,8 +69,9 @@ export default function LoginPage() {
         return;
       }
 
-      console.log("User logged in successfully");
-      
+      login({ id: user.id, username: user.username }, loginKey);
+      navigate("/");
+
     } catch (error) {
       console.error("Error occurred while Loggin in user:", error);
       
