@@ -75,15 +75,55 @@ it("should fail when ciphertext is modified", async () => {
     key
   );
 
-  const tampered = new Uint8Array(encrypted.ciphertext);
-
+  const tampered = encrypted.ciphertext;
   tampered[0] ^= 1;
 
   await expect(
     decryptData(
       encrypted.iv,
-      tampered.buffer,
+      tampered,
       key
+    )
+  ).rejects.toThrow();
+});
+
+it("should derive the same key with the same password and salt", async () => {
+  const password = "password123";
+
+  const { key: key1, salt } = await generatePrivateKey(password);
+
+  const { key: key2 } = await generatePrivateKey(password, salt);
+
+  const data = { secret: "bitcoin" };
+
+  const encrypted = await encryptData(data, key1);
+
+  const decrypted = await decryptData(
+    encrypted.iv,
+    encrypted.ciphertext,
+    key2
+  );
+
+  expect(decrypted).toEqual(data);
+});
+
+it("should fail to decrypt with the same password but a different salt", async () => {
+  const password = "password123";
+
+  const { key: originalKey } = await generatePrivateKey(password);
+
+  const differentSalt = crypto.getRandomValues(new Uint8Array(16));
+  const { key: wrongKey } = await generatePrivateKey(password, differentSalt);
+
+  const data = { secret: "bitcoin" };
+
+  const encrypted = await encryptData(data, originalKey);
+
+  await expect(
+    decryptData(
+      encrypted.iv,
+      encrypted.ciphertext,
+      wrongKey
     )
   ).rejects.toThrow();
 });

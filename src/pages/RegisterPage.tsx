@@ -2,6 +2,7 @@ import { useState } from "react";
 import AuthLayout from "../layouts/AuthLayout";
 import { addUser, type DbUser } from "../lib/indexedDb";
 import { generatePrivateKey } from "../lib/crypto";
+import { generatePasswordVerifier } from "../lib/authentication";
 
 export interface AuthData {
   username: string;
@@ -46,10 +47,15 @@ export default function RegisterPage() {
 
       if(!validate()) return;
       const privateKeyData = await generatePrivateKey(form.password.trim());
+      const verifier = await generatePasswordVerifier(privateKeyData.key);
 
-      const newUser: DbUser = {
+
+      const newUser: Omit<DbUser, "id" | "createdAt" | "updatedAt"> = {
         username: form.username.trim().toLowerCase(),
-        salt: privateKeyData.salt
+        salt: privateKeyData.salt,
+
+        verifierIv: verifier.iv,
+        passwordVerifier: verifier.ciphertext
       }
       await addUser(newUser);
     } catch (error) {

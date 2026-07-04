@@ -6,9 +6,14 @@ let cachedDb: IDBDatabase | null = null;
 export interface DbUser {
   id?: number;
   username: string;
-  salt: Uint8Array | number[] | string;
-  createdAt?: string;
-  updatedAt?: string;
+
+  salt: Uint8Array;
+
+  passwordVerifier: Uint8Array;
+  verifierIv: Uint8Array;
+
+  createdAt: string;
+  updatedAt: string;
 }
 
 export interface DbApplication {
@@ -16,6 +21,8 @@ export interface DbApplication {
   userId: number;
   iv: Uint8Array;
   ciphertext: ArrayBuffer;
+  createdAt: string;
+  updatedAt: string; 
 }
 
 function promisifyRequest<T = any>(req: IDBRequest): Promise<T> {
@@ -113,7 +120,7 @@ export async function getUserByUsername(username: string): Promise<DbUser | unde
   return result;
 }
 
-export async function addApplication(app: Omit<DbApplication, "id">): Promise<number> {
+export async function addApplication(app: Omit<DbApplication, "id" | "createdAt" | "updatedAt">): Promise<number> {
   const now = new Date().toISOString();
   const { tx, store } = await getStore<DbApplication>("applications", "readwrite");
   const req = store.add({ ...app, createdAt: now, updatedAt: now });

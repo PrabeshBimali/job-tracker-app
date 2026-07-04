@@ -1,15 +1,10 @@
 import { argon2id } from "hash-wasm";
 
-export interface PrivateKeyData {
-  key: CryptoKey;
-  salt: Uint8Array;
-}
-
 const MEMORY_SIZE = 65536; // 64mb memory for argon2id
 
-export async function generatePrivateKey(password: string): Promise<PrivateKeyData> {
+export async function generatePrivateKey(password: string, salt?: Uint8Array): Promise<{key: CryptoKey, salt: Uint8Array}> {
 
-  const salt = crypto.getRandomValues(new Uint8Array(16));
+  salt = salt || crypto.getRandomValues(new Uint8Array(16));
 
   const rawKey = await argon2id({
     password: password,
@@ -36,13 +31,13 @@ export async function generatePrivateKey(password: string): Promise<PrivateKeyDa
 }
 
 
-export async function encryptData(data: Object, key: CryptoKey): Promise<{ iv: Uint8Array; ciphertext: ArrayBuffer }> {
+export async function encryptData(data: Object, key: CryptoKey): Promise<{ iv: Uint8Array; ciphertext: Uint8Array }> {
   const encoder = new TextEncoder();
   const encodedData = encoder.encode(JSON.stringify(data));
 
   const iv = crypto.getRandomValues(new Uint8Array(12));
 
-  const ciphertext = await crypto.subtle.encrypt(
+  const buffer = await crypto.subtle.encrypt(
     {
       name: "AES-GCM",
       iv: iv
@@ -51,17 +46,17 @@ export async function encryptData(data: Object, key: CryptoKey): Promise<{ iv: U
     encodedData
   );
 
-  return { iv, ciphertext };
+  return { iv,  ciphertext: new Uint8Array(buffer) };
 }
 
-export async function decryptData(iv: Uint8Array, ciphertext: ArrayBuffer, key: CryptoKey): Promise<Object> {
+export async function decryptData(iv: Uint8Array, ciphertext: Uint8Array, key: CryptoKey): Promise<Object> {
   const decryptedData = await crypto.subtle.decrypt(
     {
       name: "AES-GCM",
       iv: iv.buffer as ArrayBuffer
     },
     key,
-    ciphertext
+    ciphertext.buffer as ArrayBuffer
   );
 
   const decoder = new TextDecoder();
