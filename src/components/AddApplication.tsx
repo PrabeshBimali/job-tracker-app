@@ -1,15 +1,11 @@
 import { Plus } from "lucide-react"
 import { useState } from "react"
 import Modal from "./Modal";
-import AddApplicationForm, { type Application } from "./AddApplicationForm";
+import AddApplicationForm from "./AddApplicationForm";
 
 export default function AddApplication() {
 
   const [isAddFormOpen, setIsAddFormOpen] = useState<boolean>(false);
-
-  function handleAddJob(job: Application) {
-    console.log("New Job Added:", job);
-  }
 
   return (
     <div className="py-5 flex justify-end">
@@ -28,7 +24,6 @@ export default function AddApplication() {
         title="Add New Application"
       >
         <AddApplicationForm
-          onSubmit={handleAddJob}
           onClose={() => setIsAddFormOpen(false)}
         />
       </Modal>

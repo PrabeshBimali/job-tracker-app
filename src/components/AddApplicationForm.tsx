@@ -1,8 +1,12 @@
 import { useState } from "react"
+import { useAuth } from "../contexts/AuthContext";
+import { useNavigate } from "react-router";
+import { addApplication, type DbApplication } from "../lib/indexedDb";
+import { encryptData } from "../lib/crypto";
 
 export type JobStatus = "Applied" | "Interview" | "Rejected" | "Offer";
 
-export interface Application {
+export interface ApplicationType {
   id: number
   company: string
   role: string
@@ -13,18 +17,17 @@ export interface Application {
   nextAction?: string
   nextActionDate?: string
   notes?: string
-  createdAt: string
-  updatedAt: string
+  createdAt?: string
+  updatedAt?: string
 }
 
 interface AddJobFormProps {
-  onSubmit: (job: Application) => void;
   onClose: () => void;
 }
 
-type FormState = Omit<Application, "id" | "createdAt" | "updatedAt">
+type FormState = Omit<ApplicationType, "id" | "createdAt" | "updatedAt">
 
-export default function AddApplicationForm({ onSubmit, onClose }: AddJobFormProps) {
+export default function AddApplicationForm({ onClose }: AddJobFormProps) {
   const [form, setForm] = useState<FormState>({
     company: "",
     role: "",
@@ -38,6 +41,10 @@ export default function AddApplicationForm({ onSubmit, onClose }: AddJobFormProp
   });
 
   const [errors, setErrors] = useState<Partial<Record<keyof FormState, string>>>({});
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+
+  const { user, key: cryptoKey } = useAuth();
+  const navigate = useNavigate();
 
   function handleChange(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) {
     const { name, value } = e.target;
@@ -59,21 +66,35 @@ export default function AddApplicationForm({ onSubmit, onClose }: AddJobFormProp
     return Object.keys(newErrors).length === 0;
   }
 
-  function handleSubmit(e: React.SubmitEvent<HTMLFormElement>) {
-    e.preventDefault()
+  async function handleSubmit(e: React.SubmitEvent<HTMLFormElement>) {
+    e.preventDefault();
+    setIsLoading(true);
 
-    if (!validate()) return
+    try {
+      if(!cryptoKey || !user) {
+        //TODO: Show Error in Toast
+        navigate("/login");
+        throw new Error("User not logged in!");
+      }
 
-    const now = new Date().toISOString()
+      if (!validate()) return
 
-    onSubmit({
-      ...form,
-      id: Date.now(),
-      createdAt: now,
-      updatedAt: now
-    })
+      const encryptedApp = await encryptData(form, cryptoKey);
 
-    onClose()
+      const newApplication: Omit<DbApplication, "id" | "createdAt" | "updatedAt"> = {
+        userId: user.id,
+        iv: encryptedApp.iv,
+        ciphertext: encryptedApp.ciphertext
+      }
+
+      await addApplication(newApplication);
+      
+    } catch(error) {
+      console.error(error);
+    } finally {
+      setIsLoading(false);
+      onClose();
+    }
   }
 
   return (
@@ -198,7 +219,7 @@ export default function AddApplicationForm({ onSubmit, onClose }: AddJobFormProp
           type="submit"
           className="cursor-pointer px-4 py-2 rounded-md bg-button-color text-background-color hover:bg-button-color/80"
         >
-          Save
+          {isLoading ? "Adding..." : "Add Application"}
         </button>
       </div>
     </form>
