@@ -72,7 +72,6 @@ export default function AddApplicationForm({ onClose }: AddJobFormProps) {
 
     try {
       if(!cryptoKey || !user) {
-        //TODO: Show Error in Toast
         navigate("/login");
         throw new Error("User not logged in!");
       }
@@ -90,6 +89,7 @@ export default function AddApplicationForm({ onClose }: AddJobFormProps) {
       await addApplication(newApplication);
       
     } catch(error) {
+      //TODO: Handle error (e.g., show a notification)
       console.error(error);
     } finally {
       setIsLoading(false);

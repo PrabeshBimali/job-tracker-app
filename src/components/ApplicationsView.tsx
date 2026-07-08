@@ -23,7 +23,7 @@ export default function ApplicationsView() {
 
   return (
     <>
-      <ApplicationNotFoundError/>
+
     </>
   );
 }
