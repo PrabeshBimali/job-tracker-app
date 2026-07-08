@@ -1,24 +1,29 @@
-import { useEffect } from "react";
-import { useAuth } from "../contexts/AuthContext";
-import { getApplicationsByUser } from "../lib/indexedDb";
-import { decryptApplicationsInWorker } from "../lib/applications";
+import { useSyncExternalStore } from "react";
+import useLoadApplications from "../hooks/useLoadApplications";
+import applicationsStore from "../store/applications.store";
+import { ApplicationLoadingError, ApplicationNotFoundError } from "./ApplicationErrors";
 
 export default function ApplicationsView() {
 
-  const { user, key } = useAuth();
+  const { loading, error } = useLoadApplications();
+  const applications = useSyncExternalStore(applicationsStore.subscribe, applicationsStore.getSnapshot);
 
-  useEffect(() => {
-    async function fetchApplications() {
-      if(!key || !user) return;
-      const dbApps = await getApplicationsByUser(user.id);
-      const apps = await decryptApplicationsInWorker(dbApps, key);
-      console.log(apps);
-    }
-    fetchApplications();
-  }, []);
+  if(loading) {
+    //TODO: Add Skeleton Loader
+    return <p>Loading applications...</p>;
+  }
+
+  if(error) {
+    return <ApplicationLoadingError error={error} />;
+  }
+
+  if(applications.length === 0) {
+    return <ApplicationNotFoundError/>;
+  }
 
   return (
     <>
+      <ApplicationNotFoundError/>
     </>
   );
 }

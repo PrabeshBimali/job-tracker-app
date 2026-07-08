@@ -3,6 +3,8 @@ import AuthLayout from "../layouts/AuthLayout";
 import { addUser, type DbUser } from "../lib/indexedDb";
 import { generatePrivateKey } from "../lib/crypto";
 import { generatePasswordVerifier } from "../lib/authentication";
+import { useAuth } from "../contexts/AuthContext";
+import { useNavigate } from "react-router";
 
 export interface AuthData {
   username: string;
@@ -10,6 +12,9 @@ export interface AuthData {
 }
 
 export default function RegisterPage() {
+
+  const { login } = useAuth();
+  const navigate = useNavigate();
 
   const [ errors, setErrors ] = useState<Partial<Record<keyof AuthData, string>>>({});
   const [ form, setForm ] = useState<AuthData>({
@@ -57,7 +62,11 @@ export default function RegisterPage() {
         verifierIv: verifier.iv,
         passwordVerifier: verifier.ciphertext
       }
-      await addUser(newUser);
+      let id = await addUser(newUser);
+
+      login({ id, username: newUser.username }, privateKeyData.key);
+      navigate("/");
+
     } catch (error) {
 
       if(error instanceof DOMException && error.name === "ConstraintError") {

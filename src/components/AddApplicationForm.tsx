@@ -210,14 +210,14 @@ export default function AddApplicationForm({ onClose }: AddJobFormProps) {
         <button
           type="button"
           onClick={onClose}
-          className="cursor-pointer px-4 py-2 bg-secondary-color text-primary-color hover:bg-secondary-color/80 shadow-sm"
+          className="cursor-pointer px-4 py-2 bg-secondary-color text-text-color hover:bg-secondary-color/80 text-sm font-semibold"
         >
           Cancel
         </button>
 
         <button
           type="submit"
-          className="cursor-pointer px-4 py-2 bg-button-color text-background-color hover:bg-button-color/80"
+          className="cursor-pointer px-4 py-2 bg-button-color text-background-color hover:bg-button-color/80 text-sm font-semibold"
         >
           {isLoading ? "Adding..." : "Add Application"}
         </button>
