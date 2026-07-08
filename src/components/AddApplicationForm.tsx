@@ -98,10 +98,10 @@ export default function AddApplicationForm({ onClose }: AddJobFormProps) {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4 text-text-color font-semibold">
+    <form onSubmit={handleSubmit} className="space-y-4 text-text-color">
 
       <div>
-        <label className="text-sm text-text-color">Company *</label>
+        <label className="text-sm text-text-color font-semibold">Company *</label>
         <input
           name="company"
           value={form.company}
@@ -112,7 +112,7 @@ export default function AddApplicationForm({ onClose }: AddJobFormProps) {
       </div>
 
       <div>
-        <label className="text-sm text-text-color">Role *</label>
+        <label className="text-sm text-text-color font-semibold">Role *</label>
         <input
           name="role"
           value={form.role}
@@ -123,7 +123,7 @@ export default function AddApplicationForm({ onClose }: AddJobFormProps) {
       </div>
 
       <div>
-        <label className="text-sm text-text-color">Job URL</label>
+        <label className="text-sm text-text-color font-semibold">Job URL</label>
         <input
           name="jobUrl"
           value={form.jobUrl}
@@ -135,7 +135,7 @@ export default function AddApplicationForm({ onClose }: AddJobFormProps) {
       </div>
 
       <div>
-        <label className="text-sm text-text-color">Location</label>
+        <label className="text-sm text-text-color font-semibold">Location</label>
         <input
           name="location"
           value={form.location}
@@ -146,7 +146,7 @@ export default function AddApplicationForm({ onClose }: AddJobFormProps) {
 
       <div className="grid grid-cols-2 gap-3">
         <div>
-          <label className="text-sm text-text-color">Status</label>
+          <label className="text-sm text-text-color font-semibold">Status</label>
           <select
             name="status"
             value={form.status}
@@ -160,7 +160,7 @@ export default function AddApplicationForm({ onClose }: AddJobFormProps) {
         </div>
 
         <div>
-          <label className="text-sm text-text-color">Date Applied *</label>
+          <label className="text-sm text-text-color font-semibold">Date Applied *</label>
           <input
             type="date"
             name="dateApplied"
@@ -174,7 +174,7 @@ export default function AddApplicationForm({ onClose }: AddJobFormProps) {
 
       <div className="grid grid-cols-2 gap-3">
         <div>
-          <label className="text-sm text-text-color">Next Action</label>
+          <label className="text-sm text-text-color font-semibold">Next Action</label>
           <input
             name="nextAction"
             value={form.nextAction}
@@ -184,7 +184,7 @@ export default function AddApplicationForm({ onClose }: AddJobFormProps) {
         </div>
 
         <div>
-          <label className="text-sm text-text-color">Next Action Date</label>
+          <label className="text-sm text-text-color font-semibold">Next Action Date</label>
           <input
             type="date"
             name="nextActionDate"
@@ -196,7 +196,7 @@ export default function AddApplicationForm({ onClose }: AddJobFormProps) {
       </div>
 
       <div>
-        <label className="text-sm text-text-color">Notes</label>
+        <label className="text-sm text-text-color font-semibold">Notes</label>
         <textarea
           name="notes"
           value={form.notes}
@@ -210,14 +210,14 @@ export default function AddApplicationForm({ onClose }: AddJobFormProps) {
         <button
           type="button"
           onClick={onClose}
-          className="cursor-pointer px-4 py-2 rounded-md bg-secondary-color text-primary-color hover:bg-secondary-color/80 shadow-sm"
+          className="cursor-pointer px-4 py-2 bg-secondary-color text-primary-color hover:bg-secondary-color/80 shadow-sm"
         >
           Cancel
         </button>
 
         <button
           type="submit"
-          className="cursor-pointer px-4 py-2 rounded-md bg-button-color text-background-color hover:bg-button-color/80"
+          className="cursor-pointer px-4 py-2 bg-button-color text-background-color hover:bg-button-color/80"
         >
           {isLoading ? "Adding..." : "Add Application"}
         </button>

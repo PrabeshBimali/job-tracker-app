@@ -28,7 +28,7 @@ export default function Modal(props: ModalProps) {
       />
       
       <div
-        className={`relative w-auto max-w-none bg-background-color border border-secondary-color rounded-xl shadow-2xl p-6`}
+        className={`relative w-auto max-w-none bg-background-color border border-secondary-color shadow-2xl p-6`}
         style={{ width, maxWidth: 'calc(100% - 2rem)' }}
       >
         <div className="flex justify-between items-center mb-4">
