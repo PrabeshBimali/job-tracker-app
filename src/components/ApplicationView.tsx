@@ -2,8 +2,9 @@ import { useSyncExternalStore } from "react";
 import useLoadApplications from "../hooks/useLoadApplications";
 import applicationsStore from "../store/applications.store";
 import { ApplicationLoadingError, ApplicationNotFoundError } from "./ApplicationErrors";
+import ApplicationFilter from "./ApplicationFilter";
 
-export default function ApplicationsView() {
+export default function ApplicationView() {
 
   const { loading, error } = useLoadApplications();
   const applications = useSyncExternalStore(applicationsStore.subscribe, applicationsStore.getSnapshot);
@@ -22,8 +23,8 @@ export default function ApplicationsView() {
   }
 
   return (
-    <>
-
-    </>
+    <div>
+      <ApplicationFilter/>
+    </div>
   );
 }

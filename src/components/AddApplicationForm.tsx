@@ -5,18 +5,34 @@ import { addApplication, type DbApplication } from "../lib/indexedDb";
 import { encryptData } from "../lib/crypto";
 
 export type JobStatus = "Applied" | "Interview" | "Rejected" | "Offer";
+export type NextAction = "None" | "Apply" | "Follow Up" | "Interview" | "Assessment" | "Offer";
+export type WorkMode = "Remote" | "Hybrid" | "On-site";
+export type WorkType = "Full-time" | "Part-time" | "Contract" | "Internship" | "Freelance";
+
 
 export interface ApplicationType {
   id: number
+
   company: string
   role: string
+
+  status: JobStatus
+  workMode: WorkMode
+  workType: WorkType
+
+  dateApplied: string
+
   jobUrl?: string
   location?: string
-  status: JobStatus
-  dateApplied: string
-  nextAction?: string
+
+  nextAction?: NextAction
   nextActionDate?: string
+
   notes?: string
+
+  favorite?: boolean,
+  archived?: boolean,
+
   createdAt?: string
   updatedAt?: string
 }
@@ -34,10 +50,14 @@ export default function AddApplicationForm({ onClose }: AddJobFormProps) {
     jobUrl: "",
     location: "",
     status: "Applied",
+    workMode: "On-site",
+    workType: "Full-time",
     dateApplied: "",
-    nextAction: "",
+    nextAction: "None",
     nextActionDate: "",
-    notes: ""
+    notes: "",
+    favorite: false,
+    archived: false
   });
 
   const [errors, setErrors] = useState<Partial<Record<keyof FormState, string>>>({});
