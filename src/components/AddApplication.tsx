@@ -20,8 +20,7 @@ export default function AddApplication() {
       <Modal
         isOpen={isAddFormOpen}
         onClose={() => setIsAddFormOpen(false)}
-        width="900px"
-        title="Add New Application"
+        width="720px"
       >
         <AddApplicationForm
           onClose={() => setIsAddFormOpen(false)}

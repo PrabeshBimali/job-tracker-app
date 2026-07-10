@@ -3,6 +3,7 @@ import { useAuth } from "../contexts/AuthContext";
 import { useNavigate } from "react-router";
 import { addApplication, type DbApplication } from "../lib/indexedDb";
 import { encryptData } from "../lib/crypto";
+import { ChevronDown } from "lucide-react";
 
 export type JobStatus = "Applied" | "Interview" | "Rejected" | "Offer";
 export type NextAction = "None" | "Apply" | "Follow Up" | "Interview" | "Assessment" | "Offer";
@@ -52,7 +53,7 @@ export default function AddApplicationForm({ onClose }: AddJobFormProps) {
     status: "Applied",
     workMode: "On-site",
     workType: "Full-time",
-    dateApplied: "",
+    dateApplied: new Date().toISOString().split("T")[0],
     nextAction: "None",
     nextActionDate: "",
     notes: "",
@@ -62,6 +63,7 @@ export default function AddApplicationForm({ onClose }: AddJobFormProps) {
 
   const [errors, setErrors] = useState<Partial<Record<keyof FormState, string>>>({});
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [showMore, setShowMore] = useState(false);
 
   const { user, key: cryptoKey } = useAuth();
   const navigate = useNavigate();
@@ -107,140 +109,246 @@ export default function AddApplicationForm({ onClose }: AddJobFormProps) {
       }
 
       await addApplication(newApplication);
+      onClose();
       
     } catch(error) {
       //TODO: Handle error (e.g., show a notification)
       console.error(error);
     } finally {
       setIsLoading(false);
-      onClose();
     }
   }
 
+  const inputClass = `w-full border border-secondary-color bg-background-color px-3 py-2.5 outline-none transition-colors focus:border-button-color`;
+  const errorInputClass = `w-full border border-error-color bg-background-color px-3 py-2.5 outline-none transition-colors`;
+
   return (
-    <form onSubmit={handleSubmit} className="space-y-4 text-text-color">
+    <form onSubmit={handleSubmit} className="flex flex-col text-text-color">
+      <div className="space-y-8">
+        <section className="space-y-6">
 
-      <div>
-        <label className="text-sm text-text-color font-semibold">Company *</label>
-        <input
-          name="company"
-          value={form.company}
-          onChange={handleChange}
-          className={`w-full mt-1 p-1 border-b ${errors.company ? "border-error-color" : "border-secondary-color"} focus:outline-none focus:border-button-color font-normal tracking-wide`}
-        />
-        {errors.company && <span className="text-xs text-error-color">{errors.company}</span>}
-      </div>
+          <div className="flex items-center justify-between">
+            <h2 className="text-lg font-semibold">
+                Basic Information
+            </h2>
 
-      <div>
-        <label className="text-sm text-text-color font-semibold">Role *</label>
-        <input
-          name="role"
-          value={form.role}
-          onChange={handleChange}
-          className={`w-full mt-1 p-1 border-b ${errors.role ? "border-error-color" : "border-secondary-color"} focus:outline-none focus:border-button-color font-normal tracking-wide`}
-        />
-        {errors.role && <span className="text-xs text-error-color">{errors.role}</span>}
-      </div>
+            <span className="text-xs text-secondary-color">
+                Required
+            </span>
 
-      <div>
-        <label className="text-sm text-text-color font-semibold">Job URL</label>
-        <input
-          name="jobUrl"
-          value={form.jobUrl}
-          onChange={handleChange}
-          placeholder="https://..."
-          className={`w-full mt-1 p-1 border-b ${errors.jobUrl ? "border-error-color" : "border-secondary-color"} focus:outline-none focus:border-button-color font-normal tracking-wide`}
-        />
-        {errors.jobUrl && <span className="text-xs text-error-color">{errors.jobUrl}</span>}
-      </div>
+          </div>
+          <div className="border-b border-secondary-color -mt-2"></div>
 
-      <div>
-        <label className="text-sm text-text-color font-semibold">Location</label>
-        <input
-          name="location"
-          value={form.location}
-          onChange={handleChange}
-          className="w-full mt-1 p-2 bg-background-color border-b-2 border-secondary-color focus:outline-none focus:border-button-color"
-        />
-      </div>
+          <div className="grid grid-cols-2 gap-6">
+            <div>
+              <label className="block text-sm font-medium mb-1.5">Company</label>
+              <input
+                name="company"
+                placeholder="Google"
+                value={form.company}
+                onChange={handleChange}
+                className = {errors.company ? errorInputClass : inputClass}
+              />
+              <div className="mt-1 h-4">
+                {errors.company && (<p className="text-xs text-error-color">{errors.company}</p>)}
+              </div>  
+            </div>
 
-      <div className="grid grid-cols-2 gap-3">
-        <div>
-          <label className="text-sm text-text-color font-semibold">Status</label>
-          <select
-            name="status"
-            value={form.status}
-            onChange={handleChange}
-            className="w-full mt-1 p-2 bg-background-color border-b-2 border-secondary-color focus:outline-none focus:border-button-color"
-          >
-            {(["Applied", "Interview", "Rejected", "Offer"] as JobStatus[]).map(s => (
-              <option key={s}>{s}</option>
-            ))}
-          </select>
-        </div>
+            <div>
+              <label className="block text-sm font-medium mb-1.5">Role</label>
+              <input
+                name="role"
+                placeholder="Software Engineer"
+                value={form.role}
+                onChange={handleChange}
+                className = {errors.role ? errorInputClass : inputClass}
+              />
+              <div className="mt-1 h-4">
+                {errors.role && (<p className="text-xs text-error-color">{errors.role}</p>)}
+              </div>
+            </div>
+          </div>
 
-        <div>
-          <label className="text-sm text-text-color font-semibold">Date Applied *</label>
-          <input
-            type="date"
-            name="dateApplied"
-            value={form.dateApplied}
-            onChange={handleChange}
-            className={`w-full mt-1 p-1 border-b ${errors.dateApplied ? "border-error-color" : "border-secondary-color"} focus:outline-none focus:border-button-color font-normal tracking-wide`}
-          />
-          {errors.dateApplied && <span className="text-xs text-error-color">{errors.dateApplied}</span>}
-        </div>
-      </div>
 
-      <div className="grid grid-cols-2 gap-3">
-        <div>
-          <label className="text-sm text-text-color font-semibold">Next Action</label>
-          <input
-            name="nextAction"
-            value={form.nextAction}
-            onChange={handleChange}
-            className="w-full mt-1 p-2 bg-background-color border-b-2 border-secondary-color focus:outline-none focus:border-button-color"
-          />
-        </div>
+          <div className="grid grid-cols-3 gap-3">
+            <div>
+              <label className="block text-sm font-medium mb-1.5">Status</label>
+              <select
+                name="status"
+                value={form.status}
+                onChange={handleChange}
+                className={inputClass}
+              >
+                {(["Applied", "Interview", "Rejected", "Offer"] as JobStatus[]).map(s => (
+                  <option key={s}>{s}</option>
+                ))}
+              </select>
+            </div>
+            
+            <div>
+              <label className="block text-sm font-medium mb-1.5">Work Mode</label>
+              <select
+                name="workMode"
+                value={form.workMode}
+                onChange={handleChange}
+                className={inputClass}
+              >
+                {(["Remote", "On-site", "Hybrid"] as WorkMode[]).map(s => (
+                  <option key={s}>{s}</option>
+                ))}
+              </select>
+            </div>
+            
+            <div>
+              <label className="block text-sm font-medium mb-1.5">Work Type</label>
+              <select
+                name="workType"
+                value={form.workType}
+                onChange={handleChange}
+                className={inputClass}
+              >
+                {(["Full-time", "Part-time", "Contract", "Internship", "Freelance"] as WorkType[]).map(s => (
+                  <option key={s}>{s}</option>
+                ))}
+              </select>
+            </div>
+          </div>
+          <div>
+            <label className="block text-sm font-medium mb-1.5">Date Applied</label>
+            <input
+              type="date"
+              name="dateApplied"
+              value={form.dateApplied}
+              onChange={handleChange}
+              className={errors.dateApplied ? errorInputClass : inputClass}
+            />
+            <div className="mt-1 h-4">
+              {errors.dateApplied && (<p className="text-xs text-error-color">{errors.dateApplied}</p>)}
+            </div>
+          </div>
+          {
+            <div
+              className={`overflow-hidden transition-all duration-300 ease-in-out ${showMore ? "max-h-255 opacity-100 mt-8" : "max-h-0 opacity-0"}`}
+            >
+              <section className="space-y-8 pt-8 border-t border-secondary-color">
+                <section className="space-y-4">
+                  <h3 className="text-sm font-semibold uppercase tracking-wide text-text-color/70">
+                    Job Information
+                  </h3>
 
-        <div>
-          <label className="text-sm text-text-color font-semibold">Next Action Date</label>
-          <input
-            type="date"
-            name="nextActionDate"
-            value={form.nextActionDate}
-            onChange={handleChange}
-            className="w-full mt-1 p-2 bg-background-color border-b-2 border-secondary-color focus:outline-none focus:border-button-color"
-          />
-        </div>
-      </div>
+                  <div className="grid grid-cols-2 gap-6">
+                    <div>
+                      <label className="block text-sm font-medium mb-1.5">Job URL</label>
+                      <input
+                        name="jobUrl"
+                        value={form.jobUrl}
+                        onChange={handleChange}
+                        placeholder="https://..."
+                        className={errors.jobUrl ? errorInputClass : inputClass}
+                      />
+                      <div className="mt-1 h-4">
+                        {errors.jobUrl && (<p className="text-xs text-error-color">{errors.jobUrl}</p>)}
+                      </div>
+                    </div>
 
-      <div>
-        <label className="text-sm text-text-color font-semibold">Notes</label>
-        <textarea
-          name="notes"
-          value={form.notes}
-          onChange={handleChange}
-          rows={3}
-          className="w-full mt-1 p-2 bg-background-color border-b-2 border-secondary-color focus:outline-none focus:border-button-color"
-        />
-      </div>
+                    <div>
+                      <label className="block text-sm font-medium mb-1.5">Location</label>
+                      <input
+                        name="location"
+                        placeholder="New York, USA"
+                        value={form.location}
+                        onChange={handleChange}
+                        className={inputClass}
+                      />
+                    </div>
+                  </div>
+                </section>
 
-      <div className="flex justify-end gap-2 pt-2">
-        <button
-          type="button"
-          onClick={onClose}
-          className="cursor-pointer px-4 py-2 bg-secondary-color text-text-color hover:bg-secondary-color/80 text-sm font-semibold"
-        >
-          Cancel
-        </button>
+                <section className="space-y-4">
+                  <h3 className="text-sm font-semibold uppercase tracking-wide text-text-color/70">
+                    Follow Up
+                  </h3>
+                  
+                  <div className="grid grid-cols-2 gap-3">
+                    <div>
+                      <label className="block text-sm font-medium mb-1.5">Next Action</label>
+                      <select
+                        name="nextAction"
+                        value={form.nextAction}
+                        onChange={handleChange}
+                        className={inputClass}
+                      >
+                        {(["None", "Apply", "Follow Up", "Interview", "Assessment", "Offer"] as NextAction[]).map(s => (
+                          <option key={s}>{s}</option>
+                        ))}
+                      </select>
+                    </div>
+                    {
+                      form.nextAction !== "None" && (
+                        <div>
+                          <label className="block text-sm font-medium mb-1.5">Next Action Date</label>
+                          <input
+                            type="date"
+                            name="nextActionDate"
+                            value={form.nextActionDate}
+                            onChange={handleChange}
+                            className={inputClass}
+                          />
+                        </div>
+                      )
+                    }
+                  </div>
+                </section>
 
-        <button
-          type="submit"
-          className="cursor-pointer px-4 py-2 bg-button-color text-background-color hover:bg-button-color/80 text-sm font-semibold"
-        >
-          {isLoading ? "Adding..." : "Add Application"}
-        </button>
+                <div>
+                  <label className="block text-sm font-medium mb-1.5">Notes</label>
+                  <textarea
+                    name="notes"
+                    placeholder="Prepare for the DSA interview..."
+                    value={form.notes}
+                    onChange={handleChange}
+                    rows={6}
+                    className={`${inputClass} resize-y`}
+                  />
+                </div>
+              </section>
+            </div>
+          
+          }
+
+          <div className="flex justify-between items-center border-t border-secondary-color pt-8 mt-8">
+            <button
+              type="button"
+              onClick={() => setShowMore(!showMore)}
+              className="flex items-center gap-2 text-sm font-medium cursor-pointer"
+            >
+              <ChevronDown
+                size={18}
+                className={`transition-transform duration-300 ${showMore ? "rotate-180" : ""}`}
+              />
+              <span>
+                {showMore ? "Hide Additional Details" : "Show Additional Details"}
+              </span>
+            </button>
+
+            <div className="flex gap-3">
+              <button
+                type="button"
+                onClick={onClose}
+                className="cursor-pointer px-4 py-2 bg-secondary-color text-text-color hover:bg-secondary-color/80 text-sm font-semibold"
+              >
+                Cancel
+              </button>
+
+              <button
+                type="submit"
+                className="cursor-pointer px-4 py-2 bg-button-color text-background-color hover:bg-button-color/80 text-sm font-semibold"
+              >
+                {isLoading ? "Adding..." : "Add Application"}
+              </button>
+            </div>
+          </div>
+        </section>
       </div>
     </form>
   )
