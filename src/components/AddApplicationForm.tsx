@@ -5,6 +5,8 @@ import { addApplication, type DbApplication } from "../lib/indexedDb";
 import { encryptData } from "../lib/crypto";
 import { ChevronDown } from "lucide-react";
 import SelectInput from "./form/SelectInput";
+import FormInput from "./form/FormInput";
+import TextArea from "./form/TextArea";
 
 export type JobStatus = "Applied" | "Interview" | "Rejected" | "Offer";
 export type NextAction = "None" | "Apply" | "Follow Up" | "Interview" | "Assessment" | "Offer";
@@ -121,7 +123,6 @@ export default function AddApplicationForm({ onClose }: AddJobFormProps) {
   }
 
   const inputClass = `w-full border border-secondary-color bg-background-color px-3 py-2.5 outline-none transition-colors focus:border-button-color`;
-  const errorInputClass = `w-full border border-error-color bg-background-color px-3 py-2.5 outline-none transition-colors`;
 
   return (
     <form onSubmit={handleSubmit} className="flex flex-col text-text-color">
@@ -141,33 +142,23 @@ export default function AddApplicationForm({ onClose }: AddJobFormProps) {
           <div className="border-b border-secondary-color -mt-2"></div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div>
-              <label className="block text-sm font-medium mb-1.5">Company</label>
-              <input
-                name="company"
-                placeholder="Google"
-                value={form.company}
-                onChange={handleChange}
-                className = {errors.company ? errorInputClass : inputClass}
-              />
-              <div className="mt-1 h-4">
-                {errors.company && (<p className="text-xs text-error-color">{errors.company}</p>)}
-              </div>  
-            </div>
+            <FormInput
+              name="company"
+              value={form.company}
+              onChange={handleChange}
+              label="Company"
+              placeholder="Google"
+              error={errors.company}
+            />
 
-            <div>
-              <label className="block text-sm font-medium mb-1.5">Role</label>
-              <input
-                name="role"
-                placeholder="Software Engineer"
-                value={form.role}
-                onChange={handleChange}
-                className = {errors.role ? errorInputClass : inputClass}
-              />
-              <div className="mt-1 h-4">
-                {errors.role && (<p className="text-xs text-error-color">{errors.role}</p>)}
-              </div>
-            </div>
+            <FormInput
+              name="role"
+              value={form.role}
+              onChange={handleChange}
+              label="Role"
+              placeholder="Software Engineer"
+              error={errors.role}
+            />
           </div>
 
 
@@ -196,19 +187,15 @@ export default function AddApplicationForm({ onClose }: AddJobFormProps) {
               options={["Full-time", "Part-time", "Contract", "Internship", "Freelance"] as WorkType[]}
             />
           </div>
-          <div>
-            <label className="block text-sm font-medium mb-1.5">Date Applied</label>
-            <input
-              type="date"
-              name="dateApplied"
-              value={form.dateApplied}
-              onChange={handleChange}
-              className={errors.dateApplied ? errorInputClass : inputClass}
-            />
-            <div className="mt-1 h-4">
-              {errors.dateApplied && (<p className="text-xs text-error-color">{errors.dateApplied}</p>)}
-            </div>
-          </div>
+
+          <FormInput
+            name="dateApplied"
+            value={form.dateApplied}
+            onChange={handleChange}
+            label="Date Applied"
+            type="date"
+            error={errors.dateApplied}
+          />
           {
             <div
               className={`overflow-hidden transition-all duration-300 ease-in-out ${showMore ? "max-h-255 opacity-100 mt-8" : "max-h-0 opacity-0"}`}
@@ -220,30 +207,23 @@ export default function AddApplicationForm({ onClose }: AddJobFormProps) {
                   </h3>
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div>
-                      <label className="block text-sm font-medium mb-1.5">Job URL</label>
-                      <input
-                        name="jobUrl"
-                        value={form.jobUrl}
-                        onChange={handleChange}
-                        placeholder="https://..."
-                        className={errors.jobUrl ? errorInputClass : inputClass}
-                      />
-                      <div className="mt-1 h-4">
-                        {errors.jobUrl && (<p className="text-xs text-error-color">{errors.jobUrl}</p>)}
-                      </div>
-                    </div>
+                    <FormInput
+                      name="jobUrl"
+                      value={form.jobUrl}
+                      onChange={handleChange}
+                      label="Job URL"
+                      placeholder="https://..."
+                      error={errors.jobUrl}
+                    />
 
-                    <div>
-                      <label className="block text-sm font-medium mb-1.5">Location</label>
-                      <input
-                        name="location"
-                        placeholder="New York, USA"
-                        value={form.location}
-                        onChange={handleChange}
-                        className={inputClass}
-                      />
-                    </div>
+                    <FormInput
+                      name="location"
+                      value={form.location}
+                      onChange={handleChange}
+                      label="Location"
+                      placeholder="New York, USA"
+                      error={errors.jobUrl}
+                    />
                   </div>
                 </section>
 
@@ -263,32 +243,27 @@ export default function AddApplicationForm({ onClose }: AddJobFormProps) {
 
                     {
                       form.nextAction !== "None" && (
-                        <div>
-                          <label className="block text-sm font-medium mb-1.5">Next Action Date</label>
-                          <input
-                            type="date"
-                            name="nextActionDate"
-                            value={form.nextActionDate}
-                            onChange={handleChange}
-                            className={inputClass}
-                          />
-                        </div>
+                        <FormInput
+                          name="nextActionDate"
+                          value={form.nextActionDate}
+                          onChange={handleChange}
+                          label="Next Action Date"
+                          type="date"
+                          error={errors.nextActionDate}
+                        />
                       )
                     }
                   </div>
                 </section>
 
-                <div>
-                  <label className="block text-sm font-medium mb-1.5">Notes</label>
-                  <textarea
-                    name="notes"
-                    placeholder="Prepare for the DSA interview..."
-                    value={form.notes}
-                    onChange={handleChange}
-                    rows={6}
-                    className={`${inputClass} resize-y`}
-                  />
-                </div>
+                <TextArea
+                  name="notes"
+                  label="Notes"
+                  value={form.notes}
+                  onChange={handleChange}
+                  rows={6}
+                  placeholder="Prepare for the DSA interview..."
+                />
               </section>
             </div>
           
