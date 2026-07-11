@@ -4,6 +4,7 @@ import { useNavigate } from "react-router";
 import { addApplication, type DbApplication } from "../lib/indexedDb";
 import { encryptData } from "../lib/crypto";
 import { ChevronDown } from "lucide-react";
+import SelectInput from "./form/SelectInput";
 
 export type JobStatus = "Applied" | "Interview" | "Rejected" | "Offer";
 export type NextAction = "None" | "Apply" | "Follow Up" | "Interview" | "Assessment" | "Offer";
@@ -26,7 +27,7 @@ export interface ApplicationType {
   jobUrl?: string
   location?: string
 
-  nextAction?: NextAction
+  nextAction: NextAction
   nextActionDate?: string
 
   notes?: string
@@ -139,7 +140,7 @@ export default function AddApplicationForm({ onClose }: AddJobFormProps) {
           </div>
           <div className="border-b border-secondary-color -mt-2"></div>
 
-          <div className="grid grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
               <label className="block text-sm font-medium mb-1.5">Company</label>
               <input
@@ -170,48 +171,30 @@ export default function AddApplicationForm({ onClose }: AddJobFormProps) {
           </div>
 
 
-          <div className="grid grid-cols-3 gap-3">
-            <div>
-              <label className="block text-sm font-medium mb-1.5">Status</label>
-              <select
-                name="status"
-                value={form.status}
-                onChange={handleChange}
-                className={inputClass}
-              >
-                {(["Applied", "Interview", "Rejected", "Offer"] as JobStatus[]).map(s => (
-                  <option key={s}>{s}</option>
-                ))}
-              </select>
-            </div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+             <SelectInput<JobStatus>
+              name="status"
+              value={form.status}
+              onChange={handleChange}
+              label="Status"
+              options={["Applied", "Interview", "Rejected", "Offer"] as JobStatus[]}
+            />
             
-            <div>
-              <label className="block text-sm font-medium mb-1.5">Work Mode</label>
-              <select
-                name="workMode"
-                value={form.workMode}
-                onChange={handleChange}
-                className={inputClass}
-              >
-                {(["Remote", "On-site", "Hybrid"] as WorkMode[]).map(s => (
-                  <option key={s}>{s}</option>
-                ))}
-              </select>
-            </div>
-            
-            <div>
-              <label className="block text-sm font-medium mb-1.5">Work Type</label>
-              <select
-                name="workType"
-                value={form.workType}
-                onChange={handleChange}
-                className={inputClass}
-              >
-                {(["Full-time", "Part-time", "Contract", "Internship", "Freelance"] as WorkType[]).map(s => (
-                  <option key={s}>{s}</option>
-                ))}
-              </select>
-            </div>
+            <SelectInput<WorkMode>
+              name="workMode"
+              value={form.workMode}
+              onChange={handleChange}
+              label="Work Mode"
+              options={["Remote", "On-site", "Hybrid"] as WorkMode[]}
+            />
+
+            <SelectInput<WorkType>
+              name="workType"
+              value={form.workType}
+              onChange={handleChange}
+              label="Work Type"
+              options={["Full-time", "Part-time", "Contract", "Internship", "Freelance"] as WorkType[]}
+            />
           </div>
           <div>
             <label className="block text-sm font-medium mb-1.5">Date Applied</label>
@@ -236,7 +219,7 @@ export default function AddApplicationForm({ onClose }: AddJobFormProps) {
                     Job Information
                   </h3>
 
-                  <div className="grid grid-cols-2 gap-6">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
                       <label className="block text-sm font-medium mb-1.5">Job URL</label>
                       <input
@@ -269,20 +252,15 @@ export default function AddApplicationForm({ onClose }: AddJobFormProps) {
                     Follow Up
                   </h3>
                   
-                  <div className="grid grid-cols-2 gap-3">
-                    <div>
-                      <label className="block text-sm font-medium mb-1.5">Next Action</label>
-                      <select
-                        name="nextAction"
-                        value={form.nextAction}
-                        onChange={handleChange}
-                        className={inputClass}
-                      >
-                        {(["None", "Apply", "Follow Up", "Interview", "Assessment", "Offer"] as NextAction[]).map(s => (
-                          <option key={s}>{s}</option>
-                        ))}
-                      </select>
-                    </div>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                    <SelectInput<NextAction>
+                      name="nextAction"
+                      value={form.nextAction}
+                      onChange={handleChange}
+                      label="Next Action"
+                      options={["None", "Apply", "Follow Up", "Interview", "Assessment", "Offer"] as NextAction[]}
+                    />
+
                     {
                       form.nextAction !== "None" && (
                         <div>
@@ -316,7 +294,7 @@ export default function AddApplicationForm({ onClose }: AddJobFormProps) {
           
           }
 
-          <div className="flex justify-between items-center border-t border-secondary-color pt-8 mt-8">
+          <div className="flex flex-col gap-4 md:flex-row justify-between items-center border-t border-secondary-color pt-8 mt-8">
             <button
               type="button"
               onClick={() => setShowMore(!showMore)}
