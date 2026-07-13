@@ -1,21 +1,19 @@
 import { ChevronDown, Star } from "lucide-react";
-import type { ApplicationType } from "./AddApplicationForm";
+import type { ApplicationType } from "../form/AddApplicationForm";
 
 interface ApplicationRowProps {
   application: ApplicationType;
   expanded: boolean;
+  onToggle: () => void;
 }
 
-export default function ApplicationRow({
-  application,
-  expanded,
-}: ApplicationRowProps) {
+export default function ApplicationRow({ application, expanded, onToggle }: ApplicationRowProps) {
   return (
     <tr
-      /*onClick={onToggle}*/
+      onClick={onToggle}
       className="cursor-pointer border-b border-secondary-color hover:bg-background-color transition-colors text-text-color"
     >
-      <td className="px-5 py-2 md:py-4 w-10">
+      <td className="px-2 md:px-5 py-2 md:py-4 w-10">
         <ChevronDown
           size={18}
           className={`transition-transform duration-300 ${
@@ -47,11 +45,20 @@ export default function ApplicationRow({
         {application.nextAction}
       </td>
 
-      <td className="px-5 py-2 md:py-4 text-center text-yellow-400">
-        <Star
-          size={18}
-          fill={application.favorite ? "currentColor" : "none"}
-        />
+      <td className="px-5 py-2 md:py-4 text-center">
+        <button
+          type="button"
+          onClick={(e) => {
+            e.stopPropagation();
+            //onFavorite();
+          }}
+          className="cursor-pointer text-yellow-500 hover:scale-110 transition-transform"
+        >
+          <Star
+            size={20}
+            fill={application.favorite ? "currentColor" : "none"}
+          />
+        </button>
       </td>
     </tr>
   );

@@ -1,4 +1,4 @@
-import type { ApplicationType } from "../components/applications/AddApplicationForm";
+import type { ApplicationType } from "../components/form/AddApplicationForm";
 import { decryptData, encryptData } from "./crypto";
 import { insertApplication, type DbApplication } from "./indexedDb";
 

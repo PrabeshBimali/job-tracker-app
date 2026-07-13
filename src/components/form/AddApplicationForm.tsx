@@ -2,10 +2,10 @@ import { useState } from "react"
 import { useAuth } from "../../contexts/AuthContext";
 import { useNavigate } from "react-router";
 import { ChevronDown } from "lucide-react";
-import SelectInput from "../form/SelectInput";
-import FormInput from "../form/FormInput";
-import TextArea from "../form/TextArea";
-import FormSection from "../form/FormSection";
+import SelectInput from "./SelectInput";
+import FormInput from "./FormInput";
+import TextArea from "./TextArea";
+import FormSection from "./FormSection";
 import { addApplication } from "../../lib/applications";
 import applicationsStore from "../../store/applications.store";
 

@@ -1,4 +1,4 @@
-import {type ApplicationType} from "../components/applications/AddApplicationForm";
+import {type ApplicationType} from "../components/form/AddApplicationForm";
 
 class ApplicationsStore {
   private state: Array<ApplicationType>;

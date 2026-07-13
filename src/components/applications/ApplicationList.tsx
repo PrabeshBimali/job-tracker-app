@@ -1,5 +1,5 @@
-import type { ApplicationType } from "./AddApplicationForm";
-import ApplicationRow from "./ApplicationRow";
+import type { ApplicationType } from "../form/AddApplicationForm";
+import ApplicationItem from "./ApplicationItem";
 
 interface ApplicationListProps {
   applications: ApplicationType[];
@@ -11,7 +11,7 @@ export default function ApplicationsList({ applications }: ApplicationListProps)
       <table className="w-full border-collapse">
         <thead className="border-b border-secondary-color bg-background-color">
           <tr className="text-left text-text-color/80">
-            <th className="w-10 px-5 py-4"></th>
+            <th className="w-3 md:w-10 px-5 py-4"></th>
 
             <th className="px-5 py-4 text-xs font-semibold uppercase tracking-wider">
               Company
@@ -42,10 +42,10 @@ export default function ApplicationsList({ applications }: ApplicationListProps)
         <tbody>
           {
             applications.map((v, k) => {
-              return (<ApplicationRow
-                key={k}
-                application={v}
-                expanded={false}
+              return (
+                <ApplicationItem
+                  key={k}
+                  application={v}
                 />
               )
             })

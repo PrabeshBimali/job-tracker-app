@@ -2,10 +2,12 @@ import { useState, useEffect, useRef } from "react"
 import { User, Sun, Moon } from "lucide-react"
 import { useTheme } from "../contexts/ThemeContext";
 import { useAuth } from "../contexts/AuthContext";
+import { useNavigate } from "react-router";
 
 export default function Navbar() {
-  const { toggleTheme, dark } = useTheme()
-  const { user } = useAuth();
+  const { toggleTheme, dark } = useTheme();
+  const { user, logout } = useAuth();
+  const navigate = useNavigate();
 
   const [open, setOpen] = useState(false);
   const modalRef = useRef<HTMLDivElement>(null);
@@ -29,6 +31,11 @@ export default function Navbar() {
       document.removeEventListener("mousedown", handleClick);
     };
   }, [open, setOpen]);
+
+  function handleLogout() {
+    logout();
+    navigate("/login");
+  }
 
   return (
     <nav className="w-full border-b bg-primary-color border-secondary-color px-6 py-3">
@@ -59,12 +66,19 @@ export default function Navbar() {
 
               {open && (
                 <div className="absolute right-0 mt-2 w-40 bg-primary-color text-text-color rounded-md shadow-md border-text-color">
-                  <button className="w-full text-left px-4 py-2 text-sm hover:bg-secondary-color cursor-pointer font-semibold">
+                  <button className="w-full px-4 py-2 text-sm hover:bg-secondary-color cursor-pointer font-semibold text-center">
                     Export Data
                   </button>
 
-                  <button className="w-full text-left px-4 py-2 text-sm hover:bg-secondary-color cursor-pointer font-semibold">
+                  <button className="w-full px-4 py-2 text-sm hover:bg-secondary-color cursor-pointer font-semibold text-center">
                     Import Data
+                  </button>
+                  
+                  <button 
+                    className="w-full px-4 py-2 text-sm hover:bg-secondary-color text-error-color cursor-pointer font-semibold text-center"
+                    onClick={handleLogout}
+                  >
+                    Log Out
                   </button>
                 </div>
               )}
