@@ -9,7 +9,7 @@ export default function MainLayout({children}: MainLayoutProps) {
 
   return (
     <>
-      <div className="bg-background-color h-screen">
+      <div className="bg-background-color">
         <header>
           <Navbar/>
         </header>

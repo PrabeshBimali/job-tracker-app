@@ -120,7 +120,7 @@ export async function getUserByUsername(username: string): Promise<DbUser | unde
   return result;
 }
 
-export async function addApplication(app: Omit<DbApplication, "id"| "createdAt" | "updatedAt">): Promise<number> {
+export async function insertApplication(app: Omit<DbApplication, "id"| "createdAt" | "updatedAt">): Promise<number> {
   const now = new Date().toISOString();
   const { tx, store } = await getStore<DbApplication>("applications", "readwrite");
   const req = store.add({ ...app, createdAt: now, updatedAt: now });

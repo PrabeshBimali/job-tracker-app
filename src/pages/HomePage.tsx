@@ -1,5 +1,5 @@
-import AddApplication from "../components/AddApplication";
-import ApplicationView from "../components/ApplicationView";
+import AddApplication from "../components/applications/AddApplication";
+import ApplicationView from "../components/applications/ApplicationView";
 import Dashboard from "../components/Dashboard";
 import MainLayout from "../layouts/MainLayout";
 

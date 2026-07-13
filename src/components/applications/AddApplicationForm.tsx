@@ -1,12 +1,13 @@
 import { useState } from "react"
-import { useAuth } from "../contexts/AuthContext";
+import { useAuth } from "../../contexts/AuthContext";
 import { useNavigate } from "react-router";
-import { addApplication, type DbApplication } from "../lib/indexedDb";
-import { encryptData } from "../lib/crypto";
 import { ChevronDown } from "lucide-react";
-import SelectInput from "./form/SelectInput";
-import FormInput from "./form/FormInput";
-import TextArea from "./form/TextArea";
+import SelectInput from "../form/SelectInput";
+import FormInput from "../form/FormInput";
+import TextArea from "../form/TextArea";
+import FormSection from "../form/FormSection";
+import { addApplication } from "../../lib/applications";
+import applicationsStore from "../../store/applications.store";
 
 export type JobStatus = "Applied" | "Interview" | "Rejected" | "Offer";
 export type NextAction = "None" | "Apply" | "Follow Up" | "Interview" | "Assessment" | "Offer";
@@ -103,15 +104,8 @@ export default function AddApplicationForm({ onClose }: AddJobFormProps) {
 
       if (!validate()) return
 
-      const encryptedApp = await encryptData(form, cryptoKey);
-
-      const newApplication: Omit<DbApplication, "id" | "createdAt" | "updatedAt"> = {
-        userId: user.id,
-        iv: encryptedApp.iv,
-        ciphertext: encryptedApp.ciphertext
-      }
-
-      await addApplication(newApplication);
+      const addedApplication = await addApplication(form, cryptoKey, user.id);
+      applicationsStore.addNewApplication(addedApplication);
       onClose();
       
     } catch(error) {
@@ -121,8 +115,6 @@ export default function AddApplicationForm({ onClose }: AddJobFormProps) {
       setIsLoading(false);
     }
   }
-
-  const inputClass = `w-full border border-secondary-color bg-background-color px-3 py-2.5 outline-none transition-colors focus:border-button-color`;
 
   return (
     <form onSubmit={handleSubmit} className="flex flex-col text-text-color">
@@ -201,11 +193,9 @@ export default function AddApplicationForm({ onClose }: AddJobFormProps) {
               className={`overflow-hidden transition-all duration-300 ease-in-out ${showMore ? "max-h-255 opacity-100 mt-8" : "max-h-0 opacity-0"}`}
             >
               <section className="space-y-8 pt-8 border-t border-secondary-color">
-                <section className="space-y-4">
-                  <h3 className="text-sm font-semibold uppercase tracking-wide text-text-color/70">
-                    Job Information
-                  </h3>
-
+                <FormSection
+                  header="Job Information"
+                >
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <FormInput
                       name="jobUrl"
@@ -225,13 +215,11 @@ export default function AddApplicationForm({ onClose }: AddJobFormProps) {
                       error={errors.jobUrl}
                     />
                   </div>
-                </section>
+                </FormSection>
 
-                <section className="space-y-4">
-                  <h3 className="text-sm font-semibold uppercase tracking-wide text-text-color/70">
-                    Follow Up
-                  </h3>
-                  
+                <FormSection
+                  header="Follow up"
+                >
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                     <SelectInput<NextAction>
                       name="nextAction"
@@ -254,7 +242,7 @@ export default function AddApplicationForm({ onClose }: AddJobFormProps) {
                       )
                     }
                   </div>
-                </section>
+                </FormSection>
 
                 <TextArea
                   name="notes"

@@ -1,6 +1,6 @@
 import { Plus } from "lucide-react"
 import { useState } from "react"
-import Modal from "./Modal";
+import Modal from "../Modal";
 import AddApplicationForm from "./AddApplicationForm";
 
 export default function AddApplication() {

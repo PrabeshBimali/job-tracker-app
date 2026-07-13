@@ -1,8 +1,8 @@
-import type { ApplicationType } from "../components/AddApplicationForm";
+import type { ApplicationType } from "../components/applications/AddApplicationForm";
 import { decryptData, encryptData } from "./crypto";
-import type { DbApplication } from "./indexedDb";
+import { insertApplication, type DbApplication } from "./indexedDb";
 
-export async function encryptApplication(app: Omit<ApplicationType, "id" | "createdAt" | "updatedAt">, key: CryptoKey): Promise<{ iv: Uint8Array; ciphertext: Uint8Array }> {
+async function encryptApplication(app: Omit<ApplicationType, "id" | "createdAt" | "updatedAt">, key: CryptoKey): Promise<{ iv: Uint8Array; ciphertext: Uint8Array }> {
   const encryptedData = await encryptData(app, key);
   return encryptedData;
 }
@@ -45,4 +45,23 @@ export async function decryptApplicationsInWorker(apps: DbApplication[], key: Cr
     
     worker.postMessage({ type: "applications_decrypt", payload: { dbApps: apps, key } });
   });
+}
+
+export function getVisibleApplications(applications: ApplicationType[]): ApplicationType[] {
+  return applications;
+}
+
+export async function addApplication(application: Omit<ApplicationType, "id" | "createdAt" | "updatedAt">, key: CryptoKey, userid: number): Promise<ApplicationType> {
+  const encryptedApp = await encryptApplication(application, key);
+
+  const dbApplication: Omit<DbApplication, "id" | "createdAt" | "updatedAt"> = {
+    userId: userid,
+    iv: encryptedApp.iv,
+    ciphertext: encryptedApp.ciphertext
+  }
+
+  const applicationId = await insertApplication(dbApplication);
+  
+  const now = new Date().toISOString();
+  return { ...application, "id": applicationId, "createdAt": now, "updatedAt": now };
 }
