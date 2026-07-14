@@ -5,9 +5,10 @@ import ExpandedRow from "./ExpandedRow";
 
 interface ApplicationItemProps {
   application: ApplicationType;
+  onDelete: (application: ApplicationType) => void;
 }
 
-export default function ApplicationItem({ application }: ApplicationItemProps) {
+export default function ApplicationItem({ application, onDelete }: ApplicationItemProps) {
   const [expanded, setExpanded] = useState(false);
 
   return (
@@ -21,6 +22,7 @@ export default function ApplicationItem({ application }: ApplicationItemProps) {
       <ExpandedRow
         application={application}
         expanded={expanded}
+        onDelete={onDelete}
       />
     </>
   );

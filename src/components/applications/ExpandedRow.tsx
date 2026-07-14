@@ -5,12 +5,10 @@ import { Trash, Edit, Archive } from "lucide-react";
 interface Props {
   application: ApplicationType;
   expanded: boolean;
+  onDelete: (application: ApplicationType) => void;
 }
 
-export default function ExpandedRow({
-  application,
-  expanded,
-}: Props) {
+export default function ExpandedRow({ application, expanded, onDelete }: Props) {
   if (!expanded) return null;
 
   return (
@@ -49,16 +47,16 @@ export default function ExpandedRow({
             <ApplicationDetail label="Job URL">
                 {
                   application.jobUrl ? (
-                          <a
-                              href={application.jobUrl}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="text-accent-color text-sm hover:text-button-color"
-                          >
-                              Open Job Posting
-                          </a>
-                      )
-                      : "—"
+                    <a
+                        href={application.jobUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-accent-color text-sm hover:text-button-color"
+                    >
+                        Open Job Posting
+                    </a>
+                  )
+                    : "—"
                 }
             </ApplicationDetail>
           </div>
@@ -85,7 +83,7 @@ export default function ExpandedRow({
               Notes
           </h3>
 
-          <p className="leading-7 whitespace-pre-wrap">
+          <p className="text-sm leading-7 whitespace-pre-wrap">
               {application.notes || "No notes added."}
           </p>
         </div>
@@ -118,6 +116,7 @@ export default function ExpandedRow({
 
           <button
               type="button"
+              onClick={() => onDelete(application)}
               className="px-4 py-2 flex items-center gap-2 font-semibold bg-error-color text-background-color cursor-pointer hover:opacity-90"
           >
             <span>

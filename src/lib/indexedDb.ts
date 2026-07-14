@@ -138,6 +138,14 @@ export async function getApplicationsByUser(userId: number): Promise<DbApplicati
   return result || [];
 }
 
+export async function getApplicationById(appId: number): Promise<DbApplication | null> {
+  const { tx, store } = await getStore<DbApplication>("applications", "readonly");
+  const req = store.get(appId);
+  const result = await promisifyRequest<DbApplication | undefined>(req);
+  await waitForTransaction(tx);
+  return result || null;
+}
+
 export async function updateApplication(app: DbApplication): Promise<void> {
   if (!app.id) throw new Error("Application must have an id to update");
   const now = new Date().toISOString();

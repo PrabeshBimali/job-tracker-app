@@ -33,6 +33,11 @@ class ApplicationsStore {
     this.state = [...this.state, application];
     this.notifySubscribers();
   }
+
+  deleteApplication = (id: number) => {
+    this.state = this.state.filter(app => app.id !== id);
+    this.notifySubscribers();
+  }
 }
 
 const applicationsStore = new ApplicationsStore();

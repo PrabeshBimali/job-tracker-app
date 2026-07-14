@@ -12,9 +12,15 @@ export default function Modal(props: ModalProps) {
   const { isOpen, onClose, width, children } = props;
 
   useEffect(() => {
-    if (isOpen) document.body.style.overflow = "hidden";
-    else document.body.style.overflow = "unset";
+    if (!isOpen) return;
+
+    document.body.style.overflow = "hidden";
+
+    return () => {
+      document.body.style.overflow = "unset";
+    };
   }, [isOpen]);
+
 
   if (!isOpen) return null;
 

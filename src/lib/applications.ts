@@ -1,6 +1,6 @@
 import type { ApplicationType } from "../components/form/AddApplicationForm";
 import { decryptData, encryptData } from "./crypto";
-import { insertApplication, type DbApplication } from "./indexedDb";
+import { deleteApplication, getApplicationById, getApplicationsByUser, insertApplication, type DbApplication } from "./indexedDb";
 
 async function encryptApplication(app: Omit<ApplicationType, "id" | "createdAt" | "updatedAt">, key: CryptoKey): Promise<{ iv: Uint8Array; ciphertext: Uint8Array }> {
   const encryptedData = await encryptData(app, key);
@@ -64,4 +64,13 @@ export async function addApplication(application: Omit<ApplicationType, "id" | "
   
   const now = new Date().toISOString();
   return { ...application, "id": applicationId, "createdAt": now, "updatedAt": now };
+}
+
+export async function removeApplication(application: ApplicationType, userid: number): Promise<boolean> {
+  const dbApplication = await getApplicationById(application.id);
+
+  if(!dbApplication || dbApplication.userId !== userid) return false;
+
+  await deleteApplication(application.id);
+  return true;
 }
