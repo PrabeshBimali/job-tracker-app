@@ -38,6 +38,20 @@ class ApplicationsStore {
     this.state = this.state.filter(app => app.id !== id);
     this.notifySubscribers();
   }
+
+  toggleFavorite = (id: number) => {
+    this.state = this.state.map((app) =>
+      app.id === id ? { ...app, favorite: !app.favorite } : app
+    );
+    this.notifySubscribers();
+  }
+  
+  toggleArchive = (id: number) => {
+    this.state = this.state.map((app) =>
+      app.id === id ? { ...app, archived: !app.archived } : app
+    );
+    this.notifySubscribers();
+  }
 }
 
 const applicationsStore = new ApplicationsStore();

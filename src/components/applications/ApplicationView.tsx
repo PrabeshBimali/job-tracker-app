@@ -2,7 +2,7 @@ import { useMemo, useState, useSyncExternalStore } from "react";
 import useLoadApplications from "../../hooks/useLoadApplications";
 import applicationsStore from "../../store/applications.store";
 import { ApplicationLoadingError, ApplicationNotFoundError } from "./ApplicationErrors";
-import { getVisibleApplications, removeApplication } from "../../lib/applications";
+import { getVisibleApplications, removeApplication, toggleDbMetadata } from "../../lib/applications";
 import ApplicationsList from "./ApplicationList";
 import type { ApplicationType } from "../form/AddApplicationForm";
 import DeleteApplicationPopup from "../form/DeleteApplicationPopup";
@@ -30,10 +30,33 @@ export default function ApplicationView() {
       await removeApplication(deletingApplication, user.id);
       applicationsStore.deleteApplication(deletingApplication.id);
 
-    } catch {
-
+    } catch(error) {
+      //TODO: Add toast to show generic error
+      console.error(error)
     } finally {
       setDeletingApplication(null);
+    }
+  }
+
+  async function onToggleMetadata(application: ApplicationType, field: "favorite" | "archived") {
+    try {
+      if(!cryptoKey || !user) {
+        navigate("/login");
+        throw new Error("User not logged in!");
+      }
+
+      await toggleDbMetadata(application.id, user.id, field);
+      
+      if(field === "favorite") {
+        applicationsStore.toggleFavorite(application.id);
+        return;
+      }
+
+      applicationsStore.toggleArchive(application.id);
+      
+    } catch(error) {
+      //TODO: Add toast to show generic error
+      console.error(error)
     }
   }
 
@@ -59,6 +82,7 @@ export default function ApplicationView() {
       <ApplicationsList
         applications={visibleApplications}
         onDelete={setDeletingApplication}
+        onToggleMetadata={onToggleMetadata}
       />
 
       <DeleteApplicationPopup

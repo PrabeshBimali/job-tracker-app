@@ -5,9 +5,11 @@ interface ApplicationRowProps {
   application: ApplicationType;
   expanded: boolean;
   onToggle: () => void;
+  onToggleMetadata: (application: ApplicationType, field: "favorite" | "archived") => void;
 }
 
-export default function ApplicationRow({ application, expanded, onToggle }: ApplicationRowProps) {
+export default function ApplicationRow({ application, expanded, onToggle, onToggleMetadata }: ApplicationRowProps) {
+  console.log("Application ID: ", application.id);
   return (
     <tr
       onClick={onToggle}
@@ -50,7 +52,7 @@ export default function ApplicationRow({ application, expanded, onToggle }: Appl
           type="button"
           onClick={(e) => {
             e.stopPropagation();
-            //onFavorite();
+            onToggleMetadata(application, "favorite");
           }}
           className="cursor-pointer text-yellow-500 hover:scale-110 transition-transform"
         >

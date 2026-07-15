@@ -1,14 +1,15 @@
 import type { ApplicationType } from "../form/AddApplicationForm";
 import ApplicationDetail from "./ApplicationDetail";
-import { Trash, Edit, Archive } from "lucide-react";
+import { Trash, Edit, Archive, ArchiveRestoreIcon } from "lucide-react";
 
 interface Props {
   application: ApplicationType;
   expanded: boolean;
   onDelete: (application: ApplicationType) => void;
+  onToggleMetadata: (application: ApplicationType, field: "favorite" | "archived") => void;
 }
 
-export default function ExpandedRow({ application, expanded, onDelete }: Props) {
+export default function ExpandedRow({ application, expanded, onDelete, onToggleMetadata }: Props) {
   if (!expanded) return null;
 
   return (
@@ -92,7 +93,7 @@ export default function ExpandedRow({ application, expanded, onDelete }: Props) 
         <div className="border-t border-secondary-color pt-6 mt-6 flex flex-wrap justify-end gap-3">
           <button
               type="button"
-              className="px-4 py-2 flex items-center gap-2 font-semibold bg-button-color text-background-color cursor-pointer hover:bg-button-color/80"
+              className="px-4 py-2 flex items-center gap-2 font-semibold bg-button-color text-white cursor-pointer hover:bg-button-color/80"
           >
             <span>
               <Edit size={18}/>
@@ -104,20 +105,23 @@ export default function ExpandedRow({ application, expanded, onDelete }: Props) 
 
           <button
               type="button"
-              className="px-4 py-2 flex items-center gap-2 font-semibold bg-accent-color text-background-color cursor-pointer hover:bg-accent-color/80"
+              onClick={() => onToggleMetadata(application, "archived")}
+              className="px-4 py-2 flex items-center gap-2 font-semibold bg-accent-color text-white cursor-pointer hover:bg-accent-color/80"
           >
             <span>
-              <Archive size={18}/>
+              {
+                application.archived ? <ArchiveRestoreIcon size={18}/> : <Archive size={18}/>
+              }
             </span>
             <span>
-              Archive
+              { application.archived ? "Restore" : "Archive" }
             </span>
           </button>
 
           <button
               type="button"
               onClick={() => onDelete(application)}
-              className="px-4 py-2 flex items-center gap-2 font-semibold bg-error-color text-background-color cursor-pointer hover:opacity-90"
+              className="px-4 py-2 flex items-center gap-2 font-semibold bg-error-color text-white cursor-pointer hover:opacity-90"
           >
             <span>
               <Trash size={18}/>

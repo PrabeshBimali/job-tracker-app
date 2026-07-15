@@ -35,8 +35,8 @@ export interface ApplicationType {
 
   notes?: string
 
-  favorite?: boolean,
-  archived?: boolean,
+  favorite: boolean,
+  archived: boolean,
 
   createdAt?: string
   updatedAt?: string

@@ -19,10 +19,15 @@ export interface DbUser {
 export interface DbApplication {
   id: number;
   userId: number;
+
   iv: Uint8Array;
   ciphertext: Uint8Array;
-  createdAt: string;
-  updatedAt: string; 
+
+  favorite: boolean;
+  archived:boolean;
+
+  createdAt?: string;
+  updatedAt?: string; 
 }
 
 function promisifyRequest<T = any>(req: IDBRequest): Promise<T> {
@@ -146,7 +151,7 @@ export async function getApplicationById(appId: number): Promise<DbApplication |
   return result || null;
 }
 
-export async function updateApplication(app: DbApplication): Promise<void> {
+export async function setApplication(app: DbApplication): Promise<void> {
   if (!app.id) throw new Error("Application must have an id to update");
   const now = new Date().toISOString();
   const { tx, store } = await getStore<DbApplication>("applications", "readwrite");

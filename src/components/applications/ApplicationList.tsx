@@ -4,9 +4,10 @@ import ApplicationItem from "./ApplicationItem";
 interface ApplicationListProps {
   applications: ApplicationType[];
   onDelete: (application: ApplicationType) => void;
+  onToggleMetadata: (application: ApplicationType, field: "favorite" | "archived") => void;
 }
 
-export default function ApplicationsList({ applications, onDelete }: ApplicationListProps) {
+export default function ApplicationsList({ applications, onDelete, onToggleMetadata }: ApplicationListProps) {
   return (
     <div className="border border-secondary-color bg-primary-color overflow-hidden">
       <table className="w-full border-collapse">
@@ -42,12 +43,13 @@ export default function ApplicationsList({ applications, onDelete }: Application
 
         <tbody>
           {
-            applications.map((v, k) => {
+            applications.map((v, _) => {
               return (
                 <ApplicationItem
-                  key={k}
+                  key={v.id}
                   application={v}
                   onDelete={onDelete}
+                  onToggleMetadata={onToggleMetadata}
                 />
               )
             })

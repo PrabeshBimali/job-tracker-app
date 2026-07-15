@@ -1,8 +1,8 @@
 import type { ApplicationType } from "../components/form/AddApplicationForm";
 import { decryptData, encryptData } from "./crypto";
-import { deleteApplication, getApplicationById, getApplicationsByUser, insertApplication, type DbApplication } from "./indexedDb";
+import { deleteApplication, getApplicationById, insertApplication, setApplication, type DbApplication } from "./indexedDb";
 
-async function encryptApplication(app: Omit<ApplicationType, "id" | "createdAt" | "updatedAt">, key: CryptoKey): Promise<{ iv: Uint8Array; ciphertext: Uint8Array }> {
+async function encryptApplication(app: Omit<ApplicationType, "id" | "createdAt" | "updatedAt" | "favorite" | "archived">, key: CryptoKey): Promise<{ iv: Uint8Array; ciphertext: Uint8Array }> {
   const encryptedData = await encryptData(app, key);
   return encryptedData;
 }
@@ -51,13 +51,17 @@ export function getVisibleApplications(applications: ApplicationType[]): Applica
   return applications;
 }
 
-export async function addApplication(application: Omit<ApplicationType, "id" | "createdAt" | "updatedAt">, key: CryptoKey, userid: number): Promise<ApplicationType> {
-  const encryptedApp = await encryptApplication(application, key);
+export async function addApplication(application: Omit<ApplicationType, "id" | "createdAt" | "updatedAt">, key: CryptoKey, userId: number): Promise<ApplicationType> {
+
+  const { favorite, archived, ...cleanApplication } = application;
+  const encryptedApp = await encryptApplication(cleanApplication, key);
 
   const dbApplication: Omit<DbApplication, "id" | "createdAt" | "updatedAt"> = {
-    userId: userid,
+    userId: userId,
     iv: encryptedApp.iv,
-    ciphertext: encryptedApp.ciphertext
+    ciphertext: encryptedApp.ciphertext,
+    favorite: application.favorite,
+    archived: application.archived
   }
 
   const applicationId = await insertApplication(dbApplication);
@@ -66,10 +70,53 @@ export async function addApplication(application: Omit<ApplicationType, "id" | "
   return { ...application, "id": applicationId, "createdAt": now, "updatedAt": now };
 }
 
-export async function removeApplication(application: ApplicationType, userid: number): Promise<boolean> {
+export async function updateApplication(application: ApplicationType, key: CryptoKey, userId: number): Promise<ApplicationType> {
   const dbApplication = await getApplicationById(application.id);
 
-  if(!dbApplication || dbApplication.userId !== userid) return false;
+  if(!dbApplication || dbApplication.userId !== userId) {
+    throw new Error(`Application with id: ${application.id} does not exists`);
+  }
+
+  const { id, createdAt, updatedAt, favorite, archived,  ...cleanApplication } = application;
+  const encryptedApp = await encryptApplication(cleanApplication, key);
+
+  const newDbApplication: DbApplication = {
+    id: dbApplication.id,
+    userId: userId,
+    iv: encryptedApp.iv,
+    ciphertext: encryptedApp.ciphertext,
+    favorite: application.favorite,
+    archived: application.archived,
+    createdAt: dbApplication.createdAt,
+    updatedAt: dbApplication.updatedAt
+  }
+
+  await setApplication(newDbApplication);
+  const now = new Date().toISOString();
+
+  return { ...application, "updatedAt": now };
+}
+
+export async function toggleDbMetadata(appId: number, userId: number, field: "favorite" | "archived"): Promise<boolean> {
+  const dbApplication = await getApplicationById(appId);
+
+  if (!dbApplication || dbApplication.userId !== userId) {
+    throw new Error(`Unauthorized or missing application: ${appId}`);
+  }
+
+  dbApplication[field] = !dbApplication[field];
+  
+  dbApplication.updatedAt = new Date().toISOString();
+
+  await setApplication(dbApplication);
+
+  return dbApplication[field];
+}
+
+export async function removeApplication(application: ApplicationType, userId: number): Promise<boolean> {
+  const dbApplication = await getApplicationById(application.id);
+
+  if(!dbApplication || dbApplication.userId !== userId) return false;
 
   await deleteApplication(application.id);
   return true;

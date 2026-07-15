@@ -16,13 +16,13 @@ export default function DeleteApplicationPopup({ application, onClose, onDelete,
     <Modal
       isOpen={true}
       onClose={onClose}
-      width="500px"
+      width="400px"
     >
       <div className="space-y-8 text-text-color">
 
-        <div className="flex items-start gap-4">
-          <div className="flex h-12 w-12 items-center justify-center border border-error-color text-error-color">
-            <Trash size={22} />
+        <div className="flex justify-center items-start gap-4">
+          <div className="flex h-12 w-12 border-2 border-error-color rounded-sm items-center justify-center text-error-color">
+            <Trash size={25} />
           </div>
 
           <div>
@@ -38,7 +38,7 @@ export default function DeleteApplicationPopup({ application, onClose, onDelete,
 
         <div className="border border-secondary-color p-4 space-y-4">
           <div>
-            <p className="text-xs uppercase tracking-wider text-secondary-color">
+            <p className="text-xs uppercase tracking-wider text-text-color/80">
               Company
             </p>
 
@@ -48,7 +48,7 @@ export default function DeleteApplicationPopup({ application, onClose, onDelete,
           </div>
 
           <div>
-            <p className="text-xs uppercase tracking-wider text-secondary-color">
+            <p className="text-xs uppercase tracking-wider text-text-color/80">
               Role
             </p>
 
@@ -58,7 +58,7 @@ export default function DeleteApplicationPopup({ application, onClose, onDelete,
           </div>
 
           <div>
-            <p className="text-xs uppercase tracking-wider text-secondary-color">
+            <p className="text-xs uppercase tracking-wider text-text-color/80">
               Applied
             </p>
 
@@ -68,7 +68,7 @@ export default function DeleteApplicationPopup({ application, onClose, onDelete,
           </div>
         </div>
 
-        <div className="flex justify-end gap-3 border-t border-secondary-color pt-6">
+        <div className="flex justify-end gap-3 pt-3">
           <button
             type="button"
             onClick={onClose}
