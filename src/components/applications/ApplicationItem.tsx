@@ -1,8 +1,8 @@
 import { useState } from "react";
-import type { ApplicationType } from "../form/AddApplicationForm";
+import type { ApplicationType } from "../form/ApplicationForm";
 import ApplicationRow from "./ApplicationRow";
 import ExpandedRow from "./ExpandedRow";
-import React from "react";
+import ApplicationFormModal from "../form/ApplicationFormModal";
 
 interface ApplicationItemProps {
   application: ApplicationType;
@@ -10,8 +10,9 @@ interface ApplicationItemProps {
   onToggleMetadata: (application: ApplicationType, field: "favorite" | "archived") => void;
 }
 
-function ApplicationItem({ application, onDelete, onToggleMetadata }: ApplicationItemProps) {
+export default function ApplicationItem({ application, onDelete, onToggleMetadata }: ApplicationItemProps) {
   const [expanded, setExpanded] = useState(false);
+  const [ isEditOpen, setIsEditOpen ] = useState(false);
 
   return (
     <>
@@ -27,9 +28,15 @@ function ApplicationItem({ application, onDelete, onToggleMetadata }: Applicatio
         expanded={expanded}
         onDelete={onDelete}
         onToggleMetadata={onToggleMetadata}
+        openEditForm={() => setIsEditOpen(true)}
+      />
+
+      <ApplicationFormModal
+        formData={application}
+        type="update"
+        isOpen={isEditOpen}
+        onClose={() => setIsEditOpen(!isEditOpen)}
       />
     </>
   );
 }
-
-export default React.memo(ApplicationItem);

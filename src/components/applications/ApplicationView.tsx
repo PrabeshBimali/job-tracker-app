@@ -4,7 +4,7 @@ import applicationsStore from "../../store/applications.store";
 import { ApplicationLoadingError, ApplicationNotFoundError } from "./ApplicationErrors";
 import { getVisibleApplications, removeApplication, toggleDbMetadata } from "../../lib/applications";
 import ApplicationsList from "./ApplicationList";
-import type { ApplicationType } from "../form/AddApplicationForm";
+import type { ApplicationType } from "../form/ApplicationForm";
 import DeleteApplicationPopup from "../form/DeleteApplicationPopup";
 import { useAuth } from "../../contexts/AuthContext";
 import { useNavigate } from "react-router";
@@ -61,6 +61,7 @@ export default function ApplicationView() {
   }
 
   const visibleApplications = useMemo(() => {
+    console.log(applications)
     return getVisibleApplications(applications);
   }, [applications])
 

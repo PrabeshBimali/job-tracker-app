@@ -1,4 +1,4 @@
-import type { ApplicationType } from "../form/AddApplicationForm";
+import type { ApplicationType } from "../form/ApplicationForm";
 import ApplicationDetail from "./ApplicationDetail";
 import { Trash, Edit, Archive, ArchiveRestoreIcon } from "lucide-react";
 
@@ -7,9 +7,10 @@ interface Props {
   expanded: boolean;
   onDelete: (application: ApplicationType) => void;
   onToggleMetadata: (application: ApplicationType, field: "favorite" | "archived") => void;
+  openEditForm: () => void;
 }
 
-export default function ExpandedRow({ application, expanded, onDelete, onToggleMetadata }: Props) {
+export default function ExpandedRow({ application, expanded, onDelete, onToggleMetadata, openEditForm }: Props) {
   if (!expanded) return null;
 
   return (
@@ -93,6 +94,7 @@ export default function ExpandedRow({ application, expanded, onDelete, onToggleM
         <div className="border-t border-secondary-color pt-6 mt-6 flex flex-wrap justify-end gap-3">
           <button
               type="button"
+              onClick={openEditForm}
               className="px-4 py-2 flex items-center gap-2 font-semibold bg-button-color text-white cursor-pointer hover:bg-button-color/80"
           >
             <span>

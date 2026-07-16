@@ -1,4 +1,4 @@
-import type { ApplicationType } from "../form/AddApplicationForm";
+import type { ApplicationType } from "../form/ApplicationForm";
 import ApplicationItem from "./ApplicationItem";
 
 interface ApplicationListProps {

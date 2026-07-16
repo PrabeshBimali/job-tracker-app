@@ -6,7 +6,7 @@ import SelectInput from "./SelectInput";
 import FormInput from "./FormInput";
 import TextArea from "./TextArea";
 import FormSection from "./FormSection";
-import { addApplication } from "../../lib/applications";
+import { addApplication, updateApplication } from "../../lib/applications";
 import applicationsStore from "../../store/applications.store";
 
 export type JobStatus = "Applied" | "Interview" | "Rejected" | "Offer";
@@ -42,27 +42,32 @@ export interface ApplicationType {
   updatedAt?: string
 }
 
+type FormState = Omit<ApplicationType, "id" | "createdAt" | "updatedAt">
+
 interface AddJobFormProps {
+  formData: ApplicationType | null;
   onClose: () => void;
 }
 
-type FormState = Omit<ApplicationType, "id" | "createdAt" | "updatedAt">
-
-export default function AddApplicationForm({ onClose }: AddJobFormProps) {
-  const [form, setForm] = useState<FormState>({
-    company: "",
-    role: "",
-    jobUrl: "",
-    location: "",
-    status: "Applied",
-    workMode: "On-site",
-    workType: "Full-time",
-    dateApplied: new Date().toISOString().split("T")[0],
-    nextAction: "None",
-    nextActionDate: "",
-    notes: "",
-    favorite: false,
-    archived: false
+export default function ApplicationForm({ formData, onClose }: AddJobFormProps) {
+  const [form, setForm] = useState<FormState>(() => {
+    if (formData) return formData;
+    
+    return {
+      company: "",
+      role: "",
+      jobUrl: "",
+      location: "",
+      status: "Applied",
+      workMode: "On-site",
+      workType: "Full-time",
+      dateApplied: new Date().toISOString().split("T")[0],
+      nextAction: "None",
+      nextActionDate: "",
+      notes: "",
+      favorite: false,
+      archived: false
+    };
   });
 
   const [errors, setErrors] = useState<Partial<Record<keyof FormState, string>>>({});
@@ -104,8 +109,20 @@ export default function AddApplicationForm({ onClose }: AddJobFormProps) {
 
       if (!validate()) return
 
-      const addedApplication = await addApplication(form, cryptoKey, user.id);
-      applicationsStore.addNewApplication(addedApplication);
+      if(formData) {
+        const applicationToUpdate = { 
+          "id": formData.id,
+          ...form
+        }
+
+        const updatedApplication = await updateApplication(applicationToUpdate, cryptoKey, user.id);
+        applicationsStore.updateApplication(updatedApplication); 
+         
+      } else {
+        const addedApplication = await addApplication(form, cryptoKey, user.id);
+        applicationsStore.addNewApplication(addedApplication);
+
+      }
       onClose();
       
     } catch(error) {
@@ -285,7 +302,7 @@ export default function AddApplicationForm({ onClose }: AddJobFormProps) {
                 type="submit"
                 className="cursor-pointer px-4 py-2 bg-button-color text-background-color hover:bg-button-color/80 text-sm font-semibold"
               >
-                {isLoading ? "Adding..." : "Add Application"}
+                {formData ? (isLoading ? "Updating..." : "Update Application") : (isLoading ? "Adding..." : "Add Application")}
               </button>
             </div>
           </div>

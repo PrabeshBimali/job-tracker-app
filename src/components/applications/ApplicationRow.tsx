@@ -1,5 +1,5 @@
 import { ChevronDown, Star } from "lucide-react";
-import type { ApplicationType } from "../form/AddApplicationForm";
+import type { ApplicationType } from "../form/ApplicationForm";
 
 interface ApplicationRowProps {
   application: ApplicationType;
@@ -9,7 +9,6 @@ interface ApplicationRowProps {
 }
 
 export default function ApplicationRow({ application, expanded, onToggle, onToggleMetadata }: ApplicationRowProps) {
-  console.log("Application ID: ", application.id);
   return (
     <tr
       onClick={onToggle}

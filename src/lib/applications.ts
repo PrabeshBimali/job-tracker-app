@@ -1,4 +1,4 @@
-import type { ApplicationType } from "../components/form/AddApplicationForm";
+import type { ApplicationType } from "../components/form/ApplicationForm";
 import { decryptData, encryptData } from "./crypto";
 import { deleteApplication, getApplicationById, insertApplication, setApplication, type DbApplication } from "./indexedDb";
 
@@ -7,7 +7,7 @@ async function encryptApplication(app: Omit<ApplicationType, "id" | "createdAt" 
   return encryptedData;
 }
 
-export async function decryptApplication(iv: Uint8Array, ciphertext: Uint8Array, key: CryptoKey): Promise<Omit<ApplicationType, "id" | "createdAt" | "updatedAt">> {
+export async function decryptApplication(iv: Uint8Array, ciphertext: Uint8Array, key: CryptoKey): Promise<Omit<ApplicationType, "id" | "createdAt" | "updatedAt" | "favorite" | "archived">> {
   const decryptedData = await decryptData(iv, ciphertext, key);
   return decryptedData as Omit<ApplicationType, "id" | "createdAt" | "updatedAt">;
 }
@@ -22,7 +22,9 @@ export async function decryptApplications(apps: DbApplication[], key: CryptoKey)
       userId: app.userId,
       ...decryptedApp,
       createdAt: app.createdAt,
-      updatedAt: app.updatedAt
+      updatedAt: app.updatedAt,
+      favorite: app.favorite,
+      archived: app.archived
     };
   });
 
@@ -70,14 +72,14 @@ export async function addApplication(application: Omit<ApplicationType, "id" | "
   return { ...application, "id": applicationId, "createdAt": now, "updatedAt": now };
 }
 
-export async function updateApplication(application: ApplicationType, key: CryptoKey, userId: number): Promise<ApplicationType> {
+export async function updateApplication(application: Omit<ApplicationType, "createdAt" | "updatedAt">, key: CryptoKey, userId: number): Promise<ApplicationType> {
   const dbApplication = await getApplicationById(application.id);
 
   if(!dbApplication || dbApplication.userId !== userId) {
     throw new Error(`Application with id: ${application.id} does not exists`);
   }
 
-  const { id, createdAt, updatedAt, favorite, archived,  ...cleanApplication } = application;
+  const { id, favorite, archived,  ...cleanApplication } = application;
   const encryptedApp = await encryptApplication(cleanApplication, key);
 
   const newDbApplication: DbApplication = {

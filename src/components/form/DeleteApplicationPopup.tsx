@@ -1,6 +1,6 @@
 import { Trash } from "lucide-react";
 import Modal from "../Modal";
-import type { ApplicationType } from "./AddApplicationForm";
+import type { ApplicationType } from "./ApplicationForm";
 
 interface DeleteApplicationPopupProps {
   application: ApplicationType | null;

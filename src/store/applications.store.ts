@@ -1,4 +1,4 @@
-import {type ApplicationType} from "../components/form/AddApplicationForm";
+import {type ApplicationType} from "../components/form/ApplicationForm";
 
 class ApplicationsStore {
   private state: Array<ApplicationType>;
@@ -49,6 +49,13 @@ class ApplicationsStore {
   toggleArchive = (id: number) => {
     this.state = this.state.map((app) =>
       app.id === id ? { ...app, archived: !app.archived } : app
+    );
+    this.notifySubscribers();
+  }
+
+  updateApplication = (application: ApplicationType) => {
+    this.state = this.state.map((app) =>
+      app.id === application.id ? application : app
     );
     this.notifySubscribers();
   }

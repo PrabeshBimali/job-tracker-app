@@ -1,9 +1,8 @@
 import { Plus } from "lucide-react"
 import { useState } from "react"
-import Modal from "../Modal";
-import AddApplicationForm from "./AddApplicationForm";
+import ApplicationFormModal from "./ApplicationFormModal";
 
-export default function AddApplication() {
+export default function AddApplicationButton() {
 
   const [isAddFormOpen, setIsAddFormOpen] = useState<boolean>(false);
 
@@ -17,15 +16,10 @@ export default function AddApplication() {
         <span><Plus/></span>
         <span>Add New Application</span>
       </button>
-      <Modal
+      <ApplicationFormModal
         isOpen={isAddFormOpen}
         onClose={() => setIsAddFormOpen(false)}
-        width="720px"
-      >
-        <AddApplicationForm
-          onClose={() => setIsAddFormOpen(false)}
-        />
-      </Modal>
+      />
     </div>
   )
 }
