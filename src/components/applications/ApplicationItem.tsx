@@ -33,7 +33,6 @@ export default function ApplicationItem({ application, onDelete, onToggleMetadat
 
       <ApplicationFormModal
         formData={application}
-        type="update"
         isOpen={isEditOpen}
         onClose={() => setIsEditOpen(!isEditOpen)}
       />

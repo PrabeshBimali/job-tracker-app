@@ -8,6 +8,7 @@ import type { ApplicationType } from "../form/ApplicationForm";
 import DeleteApplicationPopup from "../form/DeleteApplicationPopup";
 import { useAuth } from "../../contexts/AuthContext";
 import { useNavigate } from "react-router";
+import ApplicationToolbar from "./toolbar/ApplicationToolbar";
 
 export default function ApplicationView() {
 
@@ -80,6 +81,9 @@ export default function ApplicationView() {
 
   return (
     <div>
+
+      <ApplicationToolbar/>
+
       <ApplicationsList
         applications={visibleApplications}
         onDelete={setDeletingApplication}
