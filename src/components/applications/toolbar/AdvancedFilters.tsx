@@ -4,21 +4,30 @@ import Modal from "../../Modal";
 import MultiSelectChips from "./MultiSelectChips";
 import type { NextAction, WorkMode, WorkType } from "../../form/ApplicationForm";
 import Checkbox from "../../form/Checkbox";
+import type { ApplicationFilters } from "../ApplicationView";
 
-export default function AdvancedFilters() {
+interface AdvancedFiltersProps {
+  workModes: WorkMode[];
+  workTypes: WorkType[];
+  nextActions: NextAction[];
+
+  updateFilter: <K extends keyof ApplicationFilters>( key: K, value: ApplicationFilters[K] ) => void;
+}
+
+export default function AdvancedFilters( { workModes, workTypes, nextActions, updateFilter } : AdvancedFiltersProps) {
   const [open, setOpen] = useState(false);
 
-  const [workModes, setWorkModes] = useState<WorkMode[]>([]);
-  const [workTypes, setWorkTypes] = useState<WorkType[]>([]);
-  const [nextActions, setNextActions] = useState<NextAction[]>([]);
+ // const [workModes, setWorkModes] = useState<WorkMode[]>([]);
+ // const [workTypes, setWorkTypes] = useState<WorkType[]>([]);
+ // const [nextActions, setNextActions] = useState<NextAction[]>([]);
 
   const [favoritesOnly, setFavoritesOnly] = useState(false);
   const [includeArchived, setIncludeArchived] = useState(false);
 
   function resetFilters() {
-    setWorkModes([]);
-    setWorkTypes([]);
-    setNextActions([]);
+    updateFilter("workModes", []);
+    updateFilter("workTypes", []);
+    updateFilter("nextActions", []);
     setFavoritesOnly(false);
     setIncludeArchived(false);
   }
@@ -54,34 +63,21 @@ export default function AdvancedFilters() {
             title="Work Mode"
             options={["Remote", "Hybrid", "On-site"]}
             selected={workModes}
-            onChange={setWorkModes}
+            onChange={(changed) => updateFilter("workModes", changed)}
           />
 
           <MultiSelectChips<WorkType>
             title="Work Type"
-            options={[
-              "Full-time",
-              "Part-time",
-              "Contract",
-              "Internship",
-              "Freelance",
-            ]}
+            options={[ "Full-time", "Part-time", "Contract", "Internship", "Freelance" ]}
             selected={workTypes}
-            onChange={setWorkTypes}
+            onChange={(changed) => updateFilter("workTypes", changed)}
           />
 
           <MultiSelectChips<NextAction>
             title="Next Action"
-            options={[
-              "None",
-              "Apply",
-              "Interview",
-              "Assessment",
-              "Offer",
-              "Follow Up",
-            ]}
+            options={[ "None", "Apply", "Interview", "Assessment", "Offer", "Follow Up" ]}
             selected={nextActions}
-            onChange={setNextActions}
+            onChange={(changed) => updateFilter("nextActions", changed)}
           />
 
           <div className="border-t border-secondary-color pt-6 space-y-4">

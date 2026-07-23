@@ -4,7 +4,7 @@ import applicationsStore from "../../store/applications.store";
 import { ApplicationLoadingError, ApplicationNotFoundError } from "./ApplicationErrors";
 import { getVisibleApplications, removeApplication, toggleDbMetadata } from "../../lib/applications";
 import ApplicationsList from "./ApplicationList";
-import type { ApplicationType, JobStatus, WorkMode, WorkType } from "../form/ApplicationForm";
+import type { ApplicationType, JobStatus, NextAction, WorkMode, WorkType } from "../form/ApplicationForm";
 import DeleteApplicationPopup from "../form/DeleteApplicationPopup";
 import { useAuth } from "../../contexts/AuthContext";
 import { useNavigate } from "react-router";
@@ -17,7 +17,10 @@ export interface ApplicationFilters {
   statuses: JobStatus[];
   workModes: WorkMode[];
   workTypes: WorkType[];
+  nextActions: NextAction[];
   sortBy: SortOption;
+  favorite: boolean;
+  archived: boolean;
 }
 
 export default function ApplicationView() {
@@ -28,6 +31,17 @@ export default function ApplicationView() {
   const navigate = useNavigate();
 
   const [ deletingApplication, setDeletingApplication ] = useState<ApplicationType | null>(null);
+
+  const [ filters, setFilters ] = useState<ApplicationFilters>({
+    search: "",
+    statuses: [],
+    workModes: [],
+    workTypes: [],
+    nextActions: [],
+    sortBy: "Newest",
+    favorite: false,
+    archived: false
+  })
 
   const [ page, setPage ] = useState<number>(1);
   const [ pageSize, setPageSize ] = useState<number>(10);
@@ -75,10 +89,17 @@ export default function ApplicationView() {
     }
   }
 
+  function updateFilter<K extends keyof ApplicationFilters>( key: K, value: ApplicationFilters[K] ) {
+    setFilters(prev => ({
+      ...prev,
+      [key]: value,
+    }));
+  }
+
   const visibleApplications = useMemo(() => {
     console.log(applications)
     return getVisibleApplications(applications);
-  }, [applications])
+  }, [applications, filters])
 
   if(loading) {
     //TODO: Add Skeleton Loader
@@ -96,7 +117,21 @@ export default function ApplicationView() {
   return (
     <div>
 
-      <ApplicationToolbar/>
+      <ApplicationToolbar
+        selectedStatuses={filters.statuses}
+        updateStatuses={(statuses: JobStatus[]) => updateFilter("statuses", statuses)}
+
+        search={filters.search}
+        updateSearch={(search: string) => updateFilter("search", search)}
+
+        sortBy={filters.sortBy}
+        updateSortBy={(sortBy: SortOption) => updateFilter("sortBy", sortBy)}
+
+        workModes={filters.workModes}
+        workTypes={filters.workTypes}
+        nextActions={filters.nextActions}
+        updateFilter={updateFilter}
+      />
 
       <ApplicationsList
         applications={visibleApplications}

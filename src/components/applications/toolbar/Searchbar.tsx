@@ -1,6 +1,11 @@
 import { Search } from "lucide-react";
 
-export default function Searchbar() {
+interface SearchbarProps {
+  search: string;
+  updateSearch: (search: string) => void;
+}
+
+export default function Searchbar({ search, updateSearch } : SearchbarProps) {
   return (
     <div className="relative w-full lg:max-w-md">
 
@@ -10,6 +15,8 @@ export default function Searchbar() {
       />
 
       <input
+        value={search}
+        onChange={(e) => updateSearch(e.target.value)} 
         placeholder="Search company or role..."
         className="w-full border border-secondary-color bg-background-color py-2.5 pl-10 pr-4 text-sm outline-none transition-colors focus:border-button-color"
       />

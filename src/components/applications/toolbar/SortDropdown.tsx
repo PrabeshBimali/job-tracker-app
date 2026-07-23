@@ -1,8 +1,13 @@
 import { ArrowUpDown } from "lucide-react";
 
-export type SortOption = "Newest" | "Oldest" | "Company A-Z" | "Company Z-A" | "Status" | "Next Action"
+export type SortOption = "Newest" | "Oldest" | "Company A-Z" | "Company Z-A" | "Status" | "Next Action";
 
-export default function SortDropdown() {
+interface SortDropdownProps {
+  sortBy: SortOption;
+  updateSortBy: (sortBy: SortOption) => void;
+}
+
+export default function SortDropdown( { sortBy, updateSortBy } : SortDropdownProps) {
   return (
     <div className="relative">
 
@@ -12,6 +17,8 @@ export default function SortDropdown() {
       />
 
       <select
+        value={sortBy}
+        onChange={(e) => updateSortBy(e.target.value as SortOption)}
         className="cursor-pointer border border-secondary-color bg-background-color py-2 pl-9 pr-8 text-sm outline-none transition-colors focus:border-button-color"
       >
         {(["Newest", "Oldest", "Company A-Z", "Company Z-A", "Status", "Next Action"] as SortOption[]).map(value => {

@@ -34,19 +34,7 @@ export default function MultiSelectChips<T extends string>({ title, options, sel
               key={option}
               type="button"
               onClick={() => toggle(option)}
-              className={`
-                cursor-pointer
-                border
-                px-3
-                py-1.5
-                text-sm
-                transition-colors
-                ${
-                  active
-                    ? "border-accent-color bg-accent-color text-white"
-                    : "border-secondary-color bg-background-color text-text-color hover:border-button-color"
-                }
-              `}
+              className={`cursor-pointer border px-3 py-1.5 text-sm transition-colors ${active ? "border-accent-color bg-accent-color text-white" : "border-secondary-color bg-background-color text-text-color hover:border-button-color"}`}
             >
               {option}
             </button>
