@@ -10,20 +10,20 @@ interface AdvancedFiltersProps {
   workModes: WorkMode[];
   workTypes: WorkType[];
   nextActions: NextAction[];
-  includeFavorite: boolean;
+  favoriteOnly: boolean;
   includeArchived: boolean
 
   updateFilter: <K extends keyof ApplicationFilters>( key: K, value: ApplicationFilters[K] ) => void;
 }
 
-export default function AdvancedFilters( { workModes, workTypes, nextActions, includeFavorite, includeArchived, updateFilter } : AdvancedFiltersProps) {
+export default function AdvancedFilters( { workModes, workTypes, nextActions, favoriteOnly, includeArchived, updateFilter } : AdvancedFiltersProps) {
   const [open, setOpen] = useState(false);
 
   function resetFilters() {
     updateFilter("workModes", []);
     updateFilter("workTypes", []);
     updateFilter("nextActions", []);
-    updateFilter("includeFavorite", false);
+    updateFilter("favoriteOnly", false);
     updateFilter("includeArchived", false);
   }
 
@@ -78,8 +78,8 @@ export default function AdvancedFilters( { workModes, workTypes, nextActions, in
           <div className="border-t border-secondary-color pt-6 space-y-4">
 
             <Checkbox
-              checked={includeFavorite}
-              onChange={(updated) => updateFilter("includeFavorite", updated)}
+              checked={favoriteOnly}
+              onChange={(updated) => updateFilter("favoriteOnly", updated)}
               label="Favorites only"
               description="Show only starred applications"
             />

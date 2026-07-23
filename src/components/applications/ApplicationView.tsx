@@ -1,8 +1,8 @@
-import { useMemo, useState, useSyncExternalStore } from "react";
+import { useEffect, useMemo, useState, useSyncExternalStore } from "react";
 import useLoadApplications from "../../hooks/useLoadApplications";
 import applicationsStore from "../../store/applications.store";
 import { ApplicationLoadingError, ApplicationNotFoundError } from "./ApplicationErrors";
-import { getVisibleApplications, removeApplication, toggleDbMetadata } from "../../lib/applications";
+import { getFilteredApplications, removeApplication, toggleDbMetadata } from "../../lib/applications";
 import ApplicationsList from "./ApplicationList";
 import type { ApplicationType, JobStatus, NextAction, WorkMode, WorkType } from "../form/ApplicationForm";
 import DeleteApplicationPopup from "../form/DeleteApplicationPopup";
@@ -19,7 +19,7 @@ export interface ApplicationFilters {
   workTypes: WorkType[];
   nextActions: NextAction[];
   sortBy: SortOption;
-  includeFavorite: boolean;
+  favoriteOnly: boolean;
   includeArchived: boolean;
 }
 
@@ -39,13 +39,12 @@ export default function ApplicationView() {
     workTypes: [],
     nextActions: [],
     sortBy: "Newest",
-    includeFavorite: false,
+    favoriteOnly: false,
     includeArchived: false
   })
 
   const [ page, setPage ] = useState<number>(1);
   const [ pageSize, setPageSize ] = useState<number>(10);
-  const [ totalPages, setTotalPages ] = useState<number>(50);
 
   async function onDelete() {
     try {
@@ -96,10 +95,21 @@ export default function ApplicationView() {
     }));
   }
 
+
+  const filteredApplications = useMemo(() => {
+    return getFilteredApplications(applications, filters);
+  }, [applications, filters]);
+
+  const totalPages = Math.ceil(filteredApplications.length / pageSize);
+
   const visibleApplications = useMemo(() => {
-    console.log(applications)
-    return getVisibleApplications(applications);
-  }, [applications, filters])
+    const start = (page - 1) * pageSize;
+    return filteredApplications.slice(start, start + pageSize);
+  }, [filteredApplications, page, pageSize]);
+
+  useEffect(() => {
+    setPage(1);
+  }, [filters, pageSize]);
 
   if(loading) {
     //TODO: Add Skeleton Loader
@@ -124,7 +134,7 @@ export default function ApplicationView() {
         workModes={filters.workModes}
         workTypes={filters.workTypes}
         nextActions={filters.nextActions}
-        includeFavorite={filters.includeFavorite}
+        favoriteOnly={filters.favoriteOnly}
         includeArchived={filters.includeArchived}
         updateFilter={updateFilter}
       />

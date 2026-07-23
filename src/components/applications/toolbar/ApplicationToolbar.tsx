@@ -12,7 +12,7 @@ interface ApplicationToolbarProps {
   workModes: WorkMode[];
   workTypes: WorkType[];
   nextActions: NextAction[];
-  includeFavorite: boolean;
+  favoriteOnly: boolean;
   includeArchived: boolean;
 
   updateFilter: <K extends keyof ApplicationFilters>( key: K, value: ApplicationFilters[K] ) => void;
@@ -25,7 +25,7 @@ export default function ApplicationToolbar({
   workModes,
   workTypes,
   nextActions,
-  includeFavorite,
+  favoriteOnly,
   includeArchived,
 
   updateFilter
@@ -56,7 +56,7 @@ export default function ApplicationToolbar({
               workModes={workModes}
               workTypes={workTypes}
               nextActions={nextActions}
-              includeFavorite={includeFavorite}
+              favoriteOnly={favoriteOnly}
               includeArchived={includeArchived}
               updateFilter={updateFilter}
             />
