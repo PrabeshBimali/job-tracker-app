@@ -10,26 +10,21 @@ interface AdvancedFiltersProps {
   workModes: WorkMode[];
   workTypes: WorkType[];
   nextActions: NextAction[];
+  includeFavorite: boolean;
+  includeArchived: boolean
 
   updateFilter: <K extends keyof ApplicationFilters>( key: K, value: ApplicationFilters[K] ) => void;
 }
 
-export default function AdvancedFilters( { workModes, workTypes, nextActions, updateFilter } : AdvancedFiltersProps) {
+export default function AdvancedFilters( { workModes, workTypes, nextActions, includeFavorite, includeArchived, updateFilter } : AdvancedFiltersProps) {
   const [open, setOpen] = useState(false);
-
- // const [workModes, setWorkModes] = useState<WorkMode[]>([]);
- // const [workTypes, setWorkTypes] = useState<WorkType[]>([]);
- // const [nextActions, setNextActions] = useState<NextAction[]>([]);
-
-  const [favoritesOnly, setFavoritesOnly] = useState(false);
-  const [includeArchived, setIncludeArchived] = useState(false);
 
   function resetFilters() {
     updateFilter("workModes", []);
     updateFilter("workTypes", []);
     updateFilter("nextActions", []);
-    setFavoritesOnly(false);
-    setIncludeArchived(false);
+    updateFilter("includeFavorite", false);
+    updateFilter("includeArchived", false);
   }
 
   return (
@@ -83,15 +78,15 @@ export default function AdvancedFilters( { workModes, workTypes, nextActions, up
           <div className="border-t border-secondary-color pt-6 space-y-4">
 
             <Checkbox
-              checked={favoritesOnly}
-              onChange={setFavoritesOnly}
+              checked={includeFavorite}
+              onChange={(updated) => updateFilter("includeFavorite", updated)}
               label="Favorites only"
               description="Show only starred applications"
             />
 
             <Checkbox
               checked={includeArchived}
-              onChange={setIncludeArchived}
+              onChange={(upated) => updateFilter("includeArchived", upated)}
               label="Include archived"
               description="Include archived applications in the list"
             />

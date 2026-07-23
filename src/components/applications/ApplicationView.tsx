@@ -19,8 +19,8 @@ export interface ApplicationFilters {
   workTypes: WorkType[];
   nextActions: NextAction[];
   sortBy: SortOption;
-  favorite: boolean;
-  archived: boolean;
+  includeFavorite: boolean;
+  includeArchived: boolean;
 }
 
 export default function ApplicationView() {
@@ -39,8 +39,8 @@ export default function ApplicationView() {
     workTypes: [],
     nextActions: [],
     sortBy: "Newest",
-    favorite: false,
-    archived: false
+    includeFavorite: false,
+    includeArchived: false
   })
 
   const [ page, setPage ] = useState<number>(1);
@@ -119,17 +119,13 @@ export default function ApplicationView() {
 
       <ApplicationToolbar
         selectedStatuses={filters.statuses}
-        updateStatuses={(statuses: JobStatus[]) => updateFilter("statuses", statuses)}
-
         search={filters.search}
-        updateSearch={(search: string) => updateFilter("search", search)}
-
         sortBy={filters.sortBy}
-        updateSortBy={(sortBy: SortOption) => updateFilter("sortBy", sortBy)}
-
         workModes={filters.workModes}
         workTypes={filters.workTypes}
         nextActions={filters.nextActions}
+        includeFavorite={filters.includeFavorite}
+        includeArchived={filters.includeArchived}
         updateFilter={updateFilter}
       />
 

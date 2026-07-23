@@ -7,34 +7,26 @@ import type { ApplicationFilters } from "../ApplicationView";
 
 interface ApplicationToolbarProps {
   selectedStatuses: JobStatus[];
-  updateStatuses: (statues: JobStatus[]) => void;
-
   search: string;
-  updateSearch: (search: string) => void;
-
   sortBy: SortOption;
-  updateSortBy: (sortBy: SortOption) => void;
-  
   workModes: WorkMode[];
   workTypes: WorkType[];
   nextActions: NextAction[];
+  includeFavorite: boolean;
+  includeArchived: boolean;
 
   updateFilter: <K extends keyof ApplicationFilters>( key: K, value: ApplicationFilters[K] ) => void;
 }
 
 export default function ApplicationToolbar({
   selectedStatuses,
-  updateStatuses,
-
   search,
-  updateSearch,
-
   sortBy,
-  updateSortBy,
-
   workModes,
   workTypes,
   nextActions,
+  includeFavorite,
+  includeArchived,
 
   updateFilter
 
@@ -46,24 +38,26 @@ export default function ApplicationToolbar({
 
         <Searchbar 
           search={search}
-          updateSearch={updateSearch}
+          updateSearch={(search: string) => updateFilter("search", search)}
         />
 
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
           <StatusFilter 
             selectedStatuses={selectedStatuses}
-            updateStatuses={updateStatuses}
+            updateStatuses={(updated: JobStatus[]) => updateFilter("statuses", updated)}
           />
 
           <div className="flex gap-2">
             <SortDropdown 
               sortBy={sortBy}
-              updateSortBy={updateSortBy}
+              updateSortBy={(updated: SortOption) => updateFilter("sortBy", updated)}
             />
             <AdvancedFilters 
               workModes={workModes}
               workTypes={workTypes}
               nextActions={nextActions}
+              includeFavorite={includeFavorite}
+              includeArchived={includeArchived}
               updateFilter={updateFilter}
             />
           </div>
