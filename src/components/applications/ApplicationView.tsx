@@ -100,7 +100,7 @@ export default function ApplicationView() {
     return getFilteredApplications(applications, filters);
   }, [applications, filters]);
 
-  const totalPages = Math.ceil(filteredApplications.length / pageSize);
+  const totalPages = Math.max(1, Math.ceil(filteredApplications.length / pageSize));
 
   const visibleApplications = useMemo(() => {
     const start = (page - 1) * pageSize;

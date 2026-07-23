@@ -80,7 +80,10 @@ export default function Pagination( { page, totalPages, pageSize, onPageChange, 
             <PageButton
               number={totalPages}
               active={page === totalPages}
-              onClick={onPageChange}
+              onClick={() => {
+                console.log(page)
+                return onPageChange
+              }}
             />
           </>
         )}
