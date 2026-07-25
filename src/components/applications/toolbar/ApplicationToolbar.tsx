@@ -2,8 +2,9 @@ import Searchbar from "./Searchbar";
 import StatusFilter from "./StatusFilter";
 import SortDropdown, { type SortOption } from "./SortDropdown";
 import AdvancedFilters from "./AdvancedFilters";
-import type { JobStatus, NextAction, WorkMode, WorkType } from "../../form/ApplicationForm";
+import type { ApplicationType, JobStatus, NextAction, WorkMode, WorkType } from "../../form/ApplicationForm";
 import type { ApplicationFilters } from "../ApplicationView";
+import Export from "./Export";
 
 interface ApplicationToolbarProps {
   selectedStatuses: JobStatus[];
@@ -14,6 +15,8 @@ interface ApplicationToolbarProps {
   nextActions: NextAction[];
   favoriteOnly: boolean;
   includeArchived: boolean;
+
+  filteredApplications: ApplicationType[];
 
   updateFilter: <K extends keyof ApplicationFilters>( key: K, value: ApplicationFilters[K] ) => void;
 }
@@ -27,6 +30,8 @@ export default function ApplicationToolbar({
   nextActions,
   favoriteOnly,
   includeArchived,
+
+  filteredApplications,
 
   updateFilter
 
@@ -59,6 +64,9 @@ export default function ApplicationToolbar({
               favoriteOnly={favoriteOnly}
               includeArchived={includeArchived}
               updateFilter={updateFilter}
+            />
+            <Export
+              filteredApplications={filteredApplications}
             />
           </div>
         </div>

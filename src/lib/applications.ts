@@ -21,13 +21,12 @@ export async function decryptApplications(apps: DbApplication[], key: CryptoKey)
     const decryptedApp = await decryptApplication(app.iv, app.ciphertext, key);
     return {
       id: app.id,
-      userId: app.userId,
       ...decryptedApp,
       createdAt: app.createdAt,
       updatedAt: app.updatedAt,
       favorite: app.favorite,
       archived: app.archived
-    };
+    } satisfies ApplicationType;
   });
 
   return Promise.all(applicationPromises);

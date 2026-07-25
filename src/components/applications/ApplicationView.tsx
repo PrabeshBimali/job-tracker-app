@@ -136,6 +136,7 @@ export default function ApplicationView() {
         nextActions={filters.nextActions}
         favoriteOnly={filters.favoriteOnly}
         includeArchived={filters.includeArchived}
+        filteredApplications={filteredApplications}
         updateFilter={updateFilter}
       />
 

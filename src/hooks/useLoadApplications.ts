@@ -4,7 +4,7 @@ import { getApplicationsByUser } from "../lib/indexedDb";
 import { decryptApplicationsInWorker } from "../lib/applications";
 import applicationsStore from "../store/applications.store";
 
-export default function useLoadApplications(): {loading: boolean, error: Error | null} {
+export default function useLoadApplications(): { loading: boolean, error: Error | null } {
   const { user, key } = useAuth();
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<Error | null>(null);
