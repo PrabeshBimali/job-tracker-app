@@ -4,10 +4,13 @@ import { useState, useRef, useEffect } from "react";
 import { User } from "lucide-react";
 import { getApplicationsByUser, getUserById } from "../../lib/indexedDb";
 import exportBackup from "../../lib/exportBackup";
+import RestoreBackupPopup from "./RestoreBackupPopup";
 
 export default function ProfileDropdown() {
 
   const [openProfile, setOpenProfile] = useState<boolean>(false);
+  const [openRestore, setOpenRestore] = useState<boolean>(false);
+
   const modalRef = useRef<HTMLDivElement>(null);
 
   const { user, logout } = useAuth();
@@ -62,6 +65,10 @@ export default function ProfileDropdown() {
   
   return (
     <div className="relative">
+      <RestoreBackupPopup
+        isOpen={openRestore}
+        onClose={() => setOpenRestore(false)}
+      />
       <div ref={modalRef}>
         <button
           onClick={() => setOpenProfile(!openProfile)}
@@ -77,11 +84,14 @@ export default function ProfileDropdown() {
               className="w-full px-4 py-2 text-sm hover:bg-secondary-color cursor-pointer font-semibold text-center"
               onClick={onExportBackup}
             >
-              Export Data
+              Backup Data
             </button>
 
-            <button className="w-full px-4 py-2 text-sm hover:bg-secondary-color cursor-pointer font-semibold text-center">
-              Import Data
+            <button 
+              className="w-full px-4 py-2 text-sm hover:bg-secondary-color cursor-pointer font-semibold text-center"
+              onClick={() => setOpenRestore(!openRestore)}
+            >
+              Restore Data
             </button>
 
             <button 

@@ -290,10 +290,11 @@ export default function ApplicationForm({ formData, onClose }: AddJobFormProps) 
             </button>
 
             <div className="flex gap-3">
+              
               <button
-                type="button"
+                type="button"  
                 onClick={onClose}
-                className="cursor-pointer px-4 py-2 bg-secondary-color text-text-color hover:bg-secondary-color/80 text-sm font-semibold"
+                className="cursor-pointer border border-secondary-color px-5 py-2 transition-colors hover:border-button-color"
               >
                 Cancel
               </button>
