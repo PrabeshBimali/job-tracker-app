@@ -2,6 +2,8 @@ import { useNavigate } from "react-router";
 import { useAuth } from "../../contexts/AuthContext";
 import { useState, useRef, useEffect } from "react";
 import { User } from "lucide-react";
+import { getApplicationsByUser, getUserById } from "../../lib/indexedDb";
+import exportBackup from "../../lib/exportBackup";
 
 export default function ProfileDropdown() {
 
@@ -10,6 +12,7 @@ export default function ProfileDropdown() {
 
   const { user, logout } = useAuth();
   const navigate = useNavigate();
+
 
   function handleLogout() {
     logout();
@@ -34,6 +37,28 @@ export default function ProfileDropdown() {
       document.removeEventListener("mousedown", handleClick);
     };
   }, [openProfile, setOpenProfile]);
+
+  async function onExportBackup() {
+    try {
+      if(!user) {
+        navigate("/login");
+        return;
+      }
+
+      const userData = await getUserById(user.id);
+      if(!userData) throw new Error("User not found in Database");
+
+      const dbApplications = await getApplicationsByUser(user.id);
+      if(dbApplications.length <= 0) throw new Error("No Applications Found!");
+
+      exportBackup(dbApplications, userData.salt);
+
+    } catch(error) {
+      console.error(error);
+      //TODO: toast ui for showing error notification
+    }
+  }
+
   
   return (
     <div className="relative">
@@ -48,7 +73,10 @@ export default function ProfileDropdown() {
 
         {openProfile && 
           <div className="absolute right-0 mt-2 w-40 bg-primary-color text-text-color rounded-md shadow-md border-text-color">
-            <button className="w-full px-4 py-2 text-sm hover:bg-secondary-color cursor-pointer font-semibold text-center">
+            <button 
+              className="w-full px-4 py-2 text-sm hover:bg-secondary-color cursor-pointer font-semibold text-center"
+              onClick={onExportBackup}
+            >
               Export Data
             </button>
 

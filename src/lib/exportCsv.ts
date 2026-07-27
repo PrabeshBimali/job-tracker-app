@@ -1,6 +1,6 @@
 import type { ApplicationType } from "../components/form/ApplicationForm";
 
-const DEFAULT_FILE_NAME = "job-applications.csv"
+const DEFAULT_FILE_NAME = "jobtrack-view.csv"
 
 const headers: string[] = [
   "id",
@@ -55,7 +55,7 @@ function buildApplications(applications: ApplicationType[]): Blob {
   return new Blob(finalData, { type: "text/csv;charset=utf-8" });
 }
 
-function downloadFile(blob: Blob, filename: string) {
+function downloadCsv(blob: Blob, filename: string) {
   const downloadUrl = URL.createObjectURL(blob);
 
   const link = document.createElement("a");
@@ -66,7 +66,7 @@ function downloadFile(blob: Blob, filename: string) {
   URL.revokeObjectURL(downloadUrl);
 }
 
-export function exportApplicationsCsv(applications: ApplicationType[]) {
+export default function exportCsv(applications: ApplicationType[]) {
   const blob = buildApplications(applications);
-  downloadFile(blob, DEFAULT_FILE_NAME);
+  downloadCsv(blob, DEFAULT_FILE_NAME);
 }

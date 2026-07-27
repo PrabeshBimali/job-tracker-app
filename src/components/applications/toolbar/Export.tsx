@@ -1,6 +1,6 @@
 import { FileDown } from "lucide-react";
 import type { ApplicationType } from "../../form/ApplicationForm";
-import { exportApplicationsCsv } from "../../../lib/fileExport";
+import exportCsv from "../../../lib/exportCsv";
 import { useState } from "react";
 
 interface ExportCsvProps {
@@ -18,7 +18,7 @@ export default function ExportCsv({ filteredApplications }: ExportCsvProps) {
       return clean;
     })
 
-    exportApplicationsCsv(cleanApplications)
+    exportCsv(cleanApplications)
     setIsExporting(false);
   }
   
