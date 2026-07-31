@@ -10,3 +10,33 @@ export function formatFileSize(bytes: number): string {
   
   return `${value.toFixed(1)} ${sizes[i]}`;
 }
+
+export function uint8ArrayToBase64(data: Uint8Array): string {
+  const binary = Array.from(data, byte =>
+    String.fromCharCode(byte)
+  ).join("");
+
+  return btoa(binary);
+}
+
+export function base64ToUint8Array(data: string): Uint8Array {
+  try {
+    const binary = atob(data);
+
+    const array = Array.from(binary, char =>
+      char.charCodeAt(0)
+    );
+
+    return new Uint8Array(array);
+  } catch {
+    throw new Error("Backup file contains invalid encoded data.");
+  }
+}
+
+export function getErrorMessage(error: unknown): string {
+  if (error instanceof Error) {
+    return error.message;
+  }
+
+  return "An unexpected error occurred.";
+}

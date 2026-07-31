@@ -1,4 +1,5 @@
 import type { DbApplication } from "./indexedDb";
+import { uint8ArrayToBase64 } from "./utilities";
 
 export interface BackupApplication {
   id: number;
@@ -15,19 +16,13 @@ export interface BackupFile {
   createdAt: string;
 
   user: {
+    username: string;
     salt: string;
   };
 
   applications: BackupApplication[];
 }
 
-function uint8ArrayToBase64(data: Uint8Array): string {
-  const binary = Array.from(data, byte =>
-    String.fromCharCode(byte)
-  ).join("");
-
-  return btoa(binary);
-}
 
 function createBackup(dbApplications: DbApplication[], salt: Uint8Array) {
   const cleanApplications: BackupApplication[] = dbApplications.map((app) => {
@@ -48,6 +43,7 @@ function createBackup(dbApplications: DbApplication[], salt: Uint8Array) {
     backupVersion: 1,
     createdAt: now,
     user: {
+      username: "test",
       salt: uint8ArrayToBase64(salt)
     },
     applications: cleanApplications

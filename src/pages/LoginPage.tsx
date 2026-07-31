@@ -82,7 +82,7 @@ export default function LoginPage() {
 
   return (
     <AuthLayout>
-      <div className="bg-primary-color flex flex-col gap-5 p-5 rounded-sm lg:w-1/5 md:w-1/2 sm:w-5/6">
+      <div className="w-11/12 sm:w-5/6 md:w-1/2 lg:w-1/5 bg-primary-color flex flex-col gap-5 p-5 rounded-sm">
         <h1 className="text-3xl font-bold text-center text-text-color">
           Login
         </h1>

@@ -3,6 +3,7 @@ import ProtectedRoutes from "./components/ProtectedRoutes";
 import Register from "./pages/RegisterPage"
 import Home from "./pages/HomePage"
 import LoginPage from "./pages/LoginPage";
+import RestoreBackupPage from "./pages/RestoreBackupPage";
 
 const router = createBrowserRouter([
   {
@@ -21,6 +22,10 @@ const router = createBrowserRouter([
   {
     path: "/login",
     Component: LoginPage
+  },
+  {
+    path: "/restore",
+    Component: RestoreBackupPage
   }
 ])
 
