@@ -51,6 +51,7 @@ export default function RegisterPage() {
       e.preventDefault();
 
       if(!validate()) return;
+      
       const privateKeyData = await generatePrivateKey(form.password.trim());
       const verifier = await generatePasswordVerifier(privateKeyData.key);
 

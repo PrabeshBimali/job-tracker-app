@@ -46,14 +46,8 @@ export default function ProfileDropdown() {
         return;
       }
 
-      const userData = await getUserById(user.id);
-      if(!userData) throw new Error("User not found in Database");
-
-      const dbApplications = await getApplicationsByUser(user.id);
-      if(dbApplications.length <= 0) throw new Error("No Applications Found!");
-
-      exportBackup(dbApplications, userData.salt);
-
+      exportBackup(user.id);
+      
     } catch(error) {
       console.error(error);
       //TODO: toast ui for showing error notification

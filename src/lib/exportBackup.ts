@@ -1,8 +1,7 @@
-import type { DbApplication } from "./indexedDb";
+import { getApplicationsByUser, getUserById, type DbApplication, type DbUser } from "./indexedDb";
 import { uint8ArrayToBase64 } from "./utilities";
 
 export interface BackupApplication {
-  id: number;
   iv: string;
   ciphertext: string;
   favorite: boolean;
@@ -18,16 +17,19 @@ export interface BackupFile {
   user: {
     username: string;
     salt: string;
+    passwordVerifier: string;
+    verifierIv: string;
+    createdAt: string;
+    updatedAt: string;
   };
 
   applications: BackupApplication[];
 }
 
 
-function createBackup(dbApplications: DbApplication[], salt: Uint8Array) {
+function createBackup(dbApplications: DbApplication[], user: DbUser) {
   const cleanApplications: BackupApplication[] = dbApplications.map((app) => {
     return {
-      id: app.id,
       iv: uint8ArrayToBase64(app.iv),
       ciphertext: uint8ArrayToBase64(app.ciphertext),
       favorite: app.favorite,
@@ -43,8 +45,12 @@ function createBackup(dbApplications: DbApplication[], salt: Uint8Array) {
     backupVersion: 1,
     createdAt: now,
     user: {
-      username: "test",
-      salt: uint8ArrayToBase64(salt)
+      username: user.username,
+      salt: uint8ArrayToBase64(user.salt),
+      passwordVerifier: uint8ArrayToBase64(user.passwordVerifier),
+      verifierIv: uint8ArrayToBase64(user.verifierIv),
+      createdAt: user.createdAt,
+      updatedAt: user.updatedAt
     },
     applications: cleanApplications
   };
@@ -64,8 +70,14 @@ function downloadBackup(blob: Blob, filename: string) {
   URL.revokeObjectURL(downloadUrl);
 }
 
-export default function exportBackup(dbApplications: DbApplication[], salt: Uint8Array) {
-  const blob = createBackup(dbApplications, salt);
+export default async function exportBackup(userId: number) {
+  const user = await getUserById(userId);
+  if(!user) throw new Error("User not found in Database");
+
+  const dbApplications = await getApplicationsByUser(userId);
+  if(dbApplications.length <= 0) throw new Error("No Applications Found!");
+
+  const blob = createBackup(dbApplications, user);
   const date = new Date().toISOString().slice(0, 10);
   const filename = `jobtrack-backup-${date}.json`;
   downloadBackup(blob, filename);
