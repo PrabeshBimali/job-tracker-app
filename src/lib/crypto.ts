@@ -49,7 +49,7 @@ export async function encryptData(data: Object, key: CryptoKey): Promise<{ iv: U
   return { iv,  ciphertext: new Uint8Array(buffer) };
 }
 
-export async function decryptData(iv: Uint8Array, ciphertext: Uint8Array, key: CryptoKey): Promise<Object> {
+export async function decryptData<T>(iv: Uint8Array, ciphertext: Uint8Array, key: CryptoKey): Promise<T> {
   const decryptedData = await crypto.subtle.decrypt(
     {
       name: "AES-GCM",
@@ -62,5 +62,5 @@ export async function decryptData(iv: Uint8Array, ciphertext: Uint8Array, key: C
   const decoder = new TextDecoder();
   const decodedData = decoder.decode(decryptedData);
 
-  return JSON.parse(decodedData);
+  return JSON.parse(decodedData) as T;
 }

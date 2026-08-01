@@ -99,10 +99,18 @@ async function getStore<T = any>(storeName: string, mode: IDBTransactionMode = "
   return { db, tx, store } as { db: IDBDatabase; tx: IDBTransaction; store: IDBObjectStore };
 }
 
-export async function addUser(user: Omit<DbUser, "id" | "createdAt" | "updatedAt">): Promise<number> {
+export async function insertUser(user: Omit<DbUser, "id" | "createdAt" | "updatedAt">): Promise<number> {
   const now = new Date().toISOString();
   const { tx, store } = await getStore<DbUser>("users", "readwrite");
   const req = store.add({ ...user, createdAt: now, updatedAt: now });
+  const id = await promisifyRequest<number>(req);
+  await waitForTransaction(tx);
+  return id;
+}
+
+export async function restoreUser(user: Omit<DbUser, "id">): Promise<number> {
+  const { tx, store } = await getStore<DbUser>("users", "readwrite");
+  const req = store.add({ ...user });
   const id = await promisifyRequest<number>(req);
   await waitForTransaction(tx);
   return id;
@@ -132,6 +140,16 @@ export async function insertApplication(app: Omit<DbApplication, "id"| "createdA
   const id = await promisifyRequest<number>(req);
   await waitForTransaction(tx);
   return id;
+}
+
+export async function restoreApplications(applications: Omit<DbApplication, "id">[]): Promise<void> {
+  const { tx, store } = await getStore<DbApplication>("applications", "readwrite");
+
+  for (const app of applications) {
+    store.add(app);
+  }
+
+  await waitForTransaction(tx);
 }
 
 export async function getApplicationsByUser(userId: number): Promise<DbApplication[]> {

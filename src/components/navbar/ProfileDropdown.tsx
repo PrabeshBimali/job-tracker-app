@@ -2,7 +2,6 @@ import { useNavigate } from "react-router";
 import { useAuth } from "../../contexts/AuthContext";
 import { useState, useRef, useEffect } from "react";
 import { User } from "lucide-react";
-import { getApplicationsByUser, getUserById } from "../../lib/indexedDb";
 import exportBackup from "../../lib/exportBackup";
 
 export default function ProfileDropdown() {
@@ -47,7 +46,7 @@ export default function ProfileDropdown() {
       }
 
       exportBackup(user.id);
-      
+
     } catch(error) {
       console.error(error);
       //TODO: toast ui for showing error notification

@@ -10,8 +10,8 @@ async function encryptApplication(app: Omit<ApplicationType, "id" | "createdAt" 
 }
 
 export async function decryptApplication(iv: Uint8Array, ciphertext: Uint8Array, key: CryptoKey): Promise<Omit<ApplicationType, "id" | "createdAt" | "updatedAt" | "favorite" | "archived">> {
-  const decryptedData = await decryptData(iv, ciphertext, key);
-  return decryptedData as Omit<ApplicationType, "id" | "createdAt" | "updatedAt">;
+  const decryptedData = await decryptData<Omit<ApplicationType, "id" | "createdAt" | "updatedAt">>(iv, ciphertext, key);
+  return decryptedData;
 }
 
 export async function decryptApplications(apps: DbApplication[], key: CryptoKey): Promise<Array<ApplicationType>> {

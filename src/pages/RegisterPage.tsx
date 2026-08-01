@@ -1,6 +1,6 @@
 import { useState } from "react";
 import AuthLayout from "../layouts/AuthLayout";
-import { addUser, type DbUser } from "../lib/indexedDb";
+import { insertUser, type DbUser } from "../lib/indexedDb";
 import { generatePrivateKey } from "../lib/crypto";
 import { generatePasswordVerifier } from "../lib/authentication";
 import { useAuth } from "../contexts/AuthContext";
@@ -63,7 +63,7 @@ export default function RegisterPage() {
         verifierIv: verifier.iv,
         passwordVerifier: verifier.ciphertext
       }
-      let id = await addUser(newUser);
+      let id = await insertUser(newUser);
 
       login({ id, username: newUser.username }, privateKeyData.key);
       navigate("/");

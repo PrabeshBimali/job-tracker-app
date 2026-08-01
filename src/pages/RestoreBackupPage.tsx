@@ -2,9 +2,10 @@ import { FolderOpen, User, Briefcase, CalendarDays, TriangleAlert, CheckCheck } 
 import AuthLayout from "../layouts/AuthLayout";
 import { useRef, useState } from "react";
 import { formatFileSize, getErrorMessage } from "../lib/utilities";
-import { createBackupPreview, deserilizeBackup, parseBackup, usernameExists, verifyBackupPassword, type BackupPreview } from "../lib/restoreBackup";
+import { createBackupPreview, deserilizeBackup, parseBackup, restoreBackupData, usernameExists, validateApplicationsCipher, verifyBackupPassword, type BackupPreview } from "../lib/restoreBackup";
 import type { BackupFile } from "../lib/exportBackup";
-import { generatePrivateKey } from "../lib/crypto";
+import { useAuth } from "../contexts/AuthContext";
+import { useNavigate } from "react-router";
 
 
 const MAX_FILE_SIZE =  20 * 1024 * 1024; // 20 MB
@@ -27,6 +28,9 @@ export default function RestoreBackupPage() {
   const [usernameError, setUsernmeError] = useState<string>("");
 
   const inputRef = useRef<HTMLInputElement>(null);
+
+  const { login } = useAuth();
+  const navigate = useNavigate();
 
   async function handleFileSelect(e: React.ChangeEvent<HTMLInputElement>) {
     try {
@@ -142,12 +146,20 @@ export default function RestoreBackupPage() {
     try {
       const { user, dbApplications } = deserilizeBackup(backupFile);
       const key = await verifyBackupPassword(password, user);
-      console.log("WTF")
 
       if(!key) {
         setPaswordError("Invalid Password");
         return;
       }
+
+      // validate ciphertext of each applications
+      await validateApplicationsCipher(dbApplications, key);
+
+      const userid = await restoreBackupData(user, dbApplications);
+
+      const authUser = { id: userid, username: user.username };
+      login(authUser, key); 
+      navigate("/");
 
     } catch(error){
       //TODO: Add toast to show error

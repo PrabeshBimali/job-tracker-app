@@ -1,7 +1,7 @@
 import { verifyPassword } from "./authentication";
-import { generatePrivateKey } from "./crypto";
+import { decryptData, generatePrivateKey } from "./crypto";
 import type { BackupApplication, BackupFile } from "./exportBackup";
-import { getUserByUsername, type DbApplication, type DbUser } from "./indexedDb";
+import { getUserByUsername, restoreApplications, restoreUser, type DbApplication, type DbUser } from "./indexedDb";
 import { base64ToUint8Array } from "./utilities";
 
 export interface BackupPreview {
@@ -122,6 +122,26 @@ export async function verifyBackupPassword(password: string, user: Omit<DbUser, 
 
   return isValid ? key : null;
 }
+
+export async function validateApplicationsCipher(applications: Omit<DbApplication, "id" | "userId">[], key: CryptoKey): Promise<void> {
+  for (const app of applications) {
+    await decryptData(app.iv, app.ciphertext, key);
+  }
+}
+
+export async function restoreBackupData(user: Omit<DbUser, "id">, applications: Omit<DbApplication, "id" | "userId">[]): Promise<number> {
+  const userId = await restoreUser(user);
+
+  const dbApplications = applications.map(app => ({
+    ...app,
+    userId,
+  }));
+
+  await restoreApplications(dbApplications);
+
+  return userId;
+}
+
 
 export async function usernameExists(username: string): Promise<boolean> {
   const user = await getUserByUsername(username);
