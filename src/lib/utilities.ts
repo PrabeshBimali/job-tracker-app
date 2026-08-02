@@ -40,3 +40,11 @@ export function getErrorMessage(error: unknown): string {
 
   return "An unexpected error occurred.";
 }
+
+export function formatDate(date: string): string {
+  return new Date(date).toLocaleDateString("en-GB", {
+    day: "2-digit",
+    month: "short",
+    year: "numeric",
+  });
+}

@@ -1,4 +1,5 @@
 import { ArrowUpDown } from "lucide-react";
+import { SORT_OPTIONS } from "../../../lib/constants";
 
 export type SortOption = "Newest" | "Oldest" | "Company A-Z" | "Company Z-A" | "Status" | "Next Action";
 
@@ -21,7 +22,7 @@ export default function SortDropdown( { sortBy, updateSortBy } : SortDropdownPro
         onChange={(e) => updateSortBy(e.target.value as SortOption)}
         className="cursor-pointer border border-secondary-color bg-background-color py-2 pl-9 pr-8 text-sm outline-none transition-colors focus:border-button-color"
       >
-        {(["Newest", "Oldest", "Company A-Z", "Company Z-A", "Status", "Next Action"] as SortOption[]).map(value => {
+        {SORT_OPTIONS.map(value => {
           return <option key={value}>{value}</option>
         })}
       </select>

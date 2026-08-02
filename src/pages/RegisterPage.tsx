@@ -21,7 +21,9 @@ export default function RegisterPage() {
     username: "",
     password: ""
   });
+
   const [ showPassword, setShowPassword ] = useState<boolean>(false);
+
   const [ isLoading, setIsLoading ] = useState<boolean>(false);
 
   function handleChange(e: React.ChangeEvent<HTMLInputElement>) {

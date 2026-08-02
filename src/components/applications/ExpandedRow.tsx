@@ -1,3 +1,4 @@
+import { formatDate } from "../../lib/utilities";
 import type { ApplicationType } from "../form/ApplicationForm";
 import ApplicationDetail from "./ApplicationDetail";
 import { Trash, Edit, Archive, ArchiveRestoreIcon } from "lucide-react";
@@ -31,7 +32,7 @@ export default function ExpandedRow({ application, expanded, onDelete, onToggleM
 
             <div className="md:hidden">
               <ApplicationDetail label="Applied Date">
-                {application.dateApplied}
+                {formatDate(application.dateApplied)}
               </ApplicationDetail>
             </div>
             <ApplicationDetail label="Work Mode">
@@ -75,7 +76,7 @@ export default function ExpandedRow({ application, expanded, onDelete, onToggleM
               </ApplicationDetail>
 
               <ApplicationDetail label="Action Date">
-                  {application.nextActionDate || "—"}
+                  {application.nextActionDate ? formatDate(application.nextActionDate) : "—"}
               </ApplicationDetail>
           </div>
         </div>

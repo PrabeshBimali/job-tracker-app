@@ -17,7 +17,9 @@ export default function LoginPage() {
     username: "",
     password: ""
   });
+
   const [ showPassword, setShowPassword ] = useState<boolean>(false);
+
   const [ isLoading, setIsLoading ] = useState<boolean>(false);
 
   function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
@@ -53,16 +55,9 @@ export default function LoginPage() {
         return;
       }
 
-      const { key: loginKey } = await generatePrivateKey(
-        form.password.trim(),
-        user.salt
-      );
+      const { key: loginKey } = await generatePrivateKey(form.password.trim(), user.salt);
 
-      const verified = await verifyPassword(
-        loginKey,
-        user.verifierIv,
-        user.passwordVerifier
-      );
+      const verified = await verifyPassword(loginKey, user.verifierIv, user.passwordVerifier);
 
       if(!verified) {
         setErrors({ password: "Incorrect password" });

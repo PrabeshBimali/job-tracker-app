@@ -8,9 +8,10 @@ import TextArea from "./TextArea";
 import FormSection from "./FormSection";
 import { addApplication, updateApplication } from "../../lib/applications";
 import applicationsStore from "../../store/applications.store";
+import { JOB_STATUSES, NEXT_ACTIONS, WORK_MODES, WORK_TYPES } from "../../lib/constants";
 
-export type JobStatus = "Applied" | "Interview" | "Rejected" | "Offer";
-export type NextAction = "None" | "Apply" | "Follow Up" | "Interview" | "Assessment" | "Offer";
+export type JobStatus = "To Apply" | "Applied" | "Interview" | "Rejected" | "Offer" | "Declined" | "Ghosted";
+export type NextAction = "None" | "Follow Up" | "Interview" | "Assessment";
 export type WorkMode = "Remote" | "Hybrid" | "On-site";
 export type WorkType = "Full-time" | "Part-time" | "Contract" | "Internship" | "Freelance";
 
@@ -177,7 +178,7 @@ export default function ApplicationForm({ formData, onClose }: AddJobFormProps) 
               value={form.status}
               onChange={handleChange}
               label="Status"
-              options={["Applied", "Interview", "Rejected", "Offer"] as JobStatus[]}
+              options={JOB_STATUSES}
             />
             
             <SelectInput<WorkMode>
@@ -185,7 +186,7 @@ export default function ApplicationForm({ formData, onClose }: AddJobFormProps) 
               value={form.workMode}
               onChange={handleChange}
               label="Work Mode"
-              options={["Remote", "On-site", "Hybrid"] as WorkMode[]}
+              options={WORK_MODES}
             />
 
             <SelectInput<WorkType>
@@ -193,7 +194,7 @@ export default function ApplicationForm({ formData, onClose }: AddJobFormProps) 
               value={form.workType}
               onChange={handleChange}
               label="Work Type"
-              options={["Full-time", "Part-time", "Contract", "Internship", "Freelance"] as WorkType[]}
+              options={WORK_TYPES}
             />
           </div>
 
@@ -243,7 +244,7 @@ export default function ApplicationForm({ formData, onClose }: AddJobFormProps) 
                       value={form.nextAction}
                       onChange={handleChange}
                       label="Next Action"
-                      options={["None", "Apply", "Follow Up", "Interview", "Assessment", "Offer"] as NextAction[]}
+                      options={NEXT_ACTIONS}
                     />
 
                     {

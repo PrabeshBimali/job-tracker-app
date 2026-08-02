@@ -1,5 +1,5 @@
 import ApplicationView from "../components/applications/ApplicationView";
-import Dashboard from "../components/Dashboard";
+import Dashboard from "../components/dashboard/Dashboard";
 import AddApplicationButton from "../components/form/AddApplicationButton";
 import MainLayout from "../layouts/MainLayout";
 

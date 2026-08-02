@@ -5,6 +5,7 @@ import MultiSelectChips from "./MultiSelectChips";
 import type { NextAction, WorkMode, WorkType } from "../../form/ApplicationForm";
 import Checkbox from "../../form/Checkbox";
 import type { ApplicationFilters } from "../ApplicationView";
+import { NEXT_ACTIONS, WORK_MODES, WORK_TYPES } from "../../../lib/constants";
 
 interface AdvancedFiltersProps {
   workModes: WorkMode[];
@@ -56,21 +57,21 @@ export default function AdvancedFilters( { workModes, workTypes, nextActions, fa
 
           <MultiSelectChips<WorkMode>
             title="Work Mode"
-            options={["Remote", "Hybrid", "On-site"]}
+            options={WORK_MODES}
             selected={workModes}
             onChange={(changed) => updateFilter("workModes", changed)}
           />
 
           <MultiSelectChips<WorkType>
             title="Work Type"
-            options={[ "Full-time", "Part-time", "Contract", "Internship", "Freelance" ]}
+            options={WORK_TYPES}
             selected={workTypes}
             onChange={(changed) => updateFilter("workTypes", changed)}
           />
 
           <MultiSelectChips<NextAction>
             title="Next Action"
-            options={[ "None", "Apply", "Interview", "Assessment", "Offer", "Follow Up" ]}
+            options={NEXT_ACTIONS}
             selected={nextActions}
             onChange={(changed) => updateFilter("nextActions", changed)}
           />

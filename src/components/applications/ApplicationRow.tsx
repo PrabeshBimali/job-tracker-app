@@ -1,5 +1,6 @@
 import { ChevronDown, Star } from "lucide-react";
 import type { ApplicationType } from "../form/ApplicationForm";
+import { formatDate } from "../../lib/utilities";
 
 interface ApplicationRowProps {
   application: ApplicationType;
@@ -39,7 +40,7 @@ export default function ApplicationRow({ application, expanded, onToggle, onTogg
       </td>
 
       <td className="px-5 py-2 md:py-4 whitespace-nowrap hidden md:table-cell">
-        {application.dateApplied}
+        {formatDate(application.dateApplied)}
       </td>
 
       <td className="px-5 py-2 md:py-4 hidden md:table-cell">
