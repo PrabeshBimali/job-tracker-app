@@ -4,7 +4,7 @@ import type { JobStatus, NextAction, WorkMode, WorkType } from "../components/fo
 export const JOB_STATUSES: JobStatus[] = [
   "To Apply",
   "Applied",
-  "Interview",
+  "In Progress",
   "Rejected",
   "Offer",
   "Declined",

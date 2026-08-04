@@ -10,7 +10,7 @@ export default function SummaryRow({ summaryData }: SummaryRowProps) {
     Total: summaryData.total,
     "To Apply": summaryData.toApply,
     Applied: summaryData.applied,
-    Interview: summaryData.interview,
+    "In Progress": summaryData.inProgress,
     Offer: summaryData.offer,
     Rejected: summaryData.rejected,
   };

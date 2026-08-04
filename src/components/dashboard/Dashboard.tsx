@@ -1,6 +1,6 @@
 import { useSyncExternalStore } from "react";
 import NextActionsCard from "./NextActionsCard";
-import StatusChartCard from "./StatusChartCard";
+import ChartCard from "./ChartCard";
 import SummaryRow from "./SummaryRow";
 import applicationsStore from "../../store/applications.store";
 import { createDashboard } from "../../lib/dashboard";
@@ -17,7 +17,12 @@ export default function Dashboard() {
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
         <NextActionsCard/>
-        <StatusChartCard/>
+        <ChartCard
+          statusChartData={dashboard.statusChartData}
+          nextActionChartData={dashboard.nextActionChartData}
+          workModeChartData={dashboard.workModeChartData}
+          workTypeChartData={dashboard.workTypeChartData}
+        />
       </div>
     </div>
   );

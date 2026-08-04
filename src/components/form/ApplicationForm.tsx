@@ -2,15 +2,15 @@ import { useState } from "react"
 import { useAuth } from "../../contexts/AuthContext";
 import { useNavigate } from "react-router";
 import { ChevronDown } from "lucide-react";
-import SelectInput from "./SelectInput";
-import FormInput from "./FormInput";
-import TextArea from "./TextArea";
+import SelectInput from "../common/SelectInput";
+import FormInput from "../common/FormInput";
+import TextArea from "../common/TextArea";
 import FormSection from "./FormSection";
 import { addApplication, updateApplication } from "../../lib/applications";
 import applicationsStore from "../../store/applications.store";
 import { JOB_STATUSES, NEXT_ACTIONS, WORK_MODES, WORK_TYPES } from "../../lib/constants";
 
-export type JobStatus = "To Apply" | "Applied" | "Interview" | "Rejected" | "Offer" | "Declined" | "Ghosted";
+export type JobStatus = "To Apply" | "Applied" | "In Progress" | "Rejected" | "Offer" | "Declined" | "Ghosted";
 export type NextAction = "None" | "Follow Up" | "Interview" | "Assessment";
 export type WorkMode = "Remote" | "Hybrid" | "On-site";
 export type WorkType = "Full-time" | "Part-time" | "Contract" | "Internship" | "Freelance";

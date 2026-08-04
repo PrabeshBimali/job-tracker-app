@@ -1,9 +1,9 @@
 import { SlidersHorizontal } from "lucide-react";
 import { useState } from "react";
 import Modal from "../../Modal";
-import MultiSelectChips from "./MultiSelectChips";
+import MultiSelectChips from "../../common/MultiSelectChips";
 import type { NextAction, WorkMode, WorkType } from "../../form/ApplicationForm";
-import Checkbox from "../../form/Checkbox";
+import Checkbox from "../../common/Checkbox";
 import type { ApplicationFilters } from "../ApplicationView";
 import { NEXT_ACTIONS, WORK_MODES, WORK_TYPES } from "../../../lib/constants";
 
@@ -30,13 +30,19 @@ export default function AdvancedFilters( { workModes, workTypes, nextActions, fa
 
   return (
     <>
-      <button
-        onClick={() => setOpen(true)}
-        className="flex cursor-pointer items-center gap-2 border border-secondary-color bg-background-color px-4 py-2 text-sm transition-colors hover:border-button-color"
-      >
-        <SlidersHorizontal size={16} />
-        Filters
-      </button>
+      <div className="group relative">
+        <button
+          onClick={() => setOpen(true)}
+          className="flex cursor-pointer items-center gap-2 border border-secondary-color bg-background-color px-4 py-2 text-sm transition-colors hover:border-button-color"
+        >
+          <SlidersHorizontal size={16} />
+        </button>
+        <div
+          className="pointer-events-none absolute left-1/2 top-full z-20 mt-2 -translate-x-1/2 whitespace-nowrap border border-secondary-color bg-primary-color px-2 py-1 text-xs opacity-0 shadow-lg transition-all duration-150 group-hover:opacity-100"
+        >
+          Filters
+        </div>
+      </div>
 
       <Modal
         isOpen={open}
